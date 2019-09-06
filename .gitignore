@@ -1,0 +1,7 @@
+# App artifacts
+/_build
+/db
+/deps
+/*.ez
+
+/config/prod.secret.exs
