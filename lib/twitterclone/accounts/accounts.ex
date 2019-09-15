@@ -2,11 +2,14 @@ defmodule Twitterclone.Accounts do
   @moduledoc """
   The Accounts context.
   """
-
+  import IEx.Helpers
+  import Ecto
   import Ecto.Query, warn: false
   alias Twitterclone.Repo
   alias Twitterclone.Accounts.User
+  alias Twitterclone.Accounts.Post
   alias Twitterclone.Guardian
+  alias Twitterclone.Guardian.Plug
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
@@ -135,4 +138,18 @@ defmodule Twitterclone.Accounts do
       {:error, :invalid_password}
     end
   end
+
+  def create_post(attrs \\ %{}, user) do
+    IO.inspect(i user)
+    %Post{message: attrs["message"], users_id: user.id}
+    |> Post.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def change_post(attrs) do
+
+  end
+
+
+
 end

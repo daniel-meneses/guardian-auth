@@ -33,6 +33,7 @@ defmodule TwittercloneWeb.Router do
 
   scope "/api/v1", TwittercloneWeb do
     pipe_through [:api, :authenticate_access]
+    post "/post", PostController, :create
   end
 
 end
