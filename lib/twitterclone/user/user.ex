@@ -1,44 +1,188 @@
 defmodule Twitterclone.User do
-  use Ecto.Schema
-  import Ecto.Changeset
-  import Comeonin.Bcrypt, only: [hashpwsalt: 1]
+  @moduledoc """
+  The User context.
+  """
 
-  alias Twitterclone.User
+  import Ecto.Query, warn: false
+  alias Twitterclone.Repo
 
-  schema "users" do
-    field :first_name, :string
-    field :last_name, :string
-    field :email, :string
-    field :password_hash, :string
-    field :password, :string, virtual: true
-    field :password_confirmation, :string, virtual: true
-    has_many :posts, Twitterclone.User.Post
-    timestamps()
+  alias Twitterclone.User.Friend
+
+  @doc """
+  Returns the list of friends.
+
+  ## Examples
+
+      iex> list_friends()
+      [%Friend{}, ...]
+
+  """
+  def list_friends do
+    raise "TODO"
   end
 
-  @doc false
-  def changeset(%User{} = user, attrs) do
-    user
-    # casting for external data validations
-    |> cast(attrs, [:first_name, :last_name, :email, :password, :password_confirmation])
-    |> validate_required([:first_name, :last_name, :email, :password, :password_confirmation])
-    |> validate_format(:email, ~r/@/)
-    |> validate_length(:password, min: 8)
-    |> validate_confirmation(:password)
-    |> unique_constraint(:email)
-    |> put_password_hash
+  @doc """
+  Gets a single friend.
+
+  Raises if the Friend does not exist.
+
+  ## Examples
+
+      iex> get_friend!(123)
+      %Friend{}
+
+  """
+  def get_friend!(id), do: raise "TODO"
+
+  @doc """
+  Creates a friend.
+
+  ## Examples
+
+      iex> create_friend(%{field: value})
+      {:ok, %Friend{}}
+
+      iex> create_friend(%{field: bad_value})
+      {:error, ...}
+
+  """
+  def create_friend(attrs \\ %{}) do
+    raise "TODO"
   end
 
-  # Private method for adding hashed password
-  defp put_password_hash(changeset) do
-    case changeset do
-      %Ecto.Changeset{valid?: true, changes: %{password: password}}
-        ->
-          # put_change for internal data changes. no validations needed.
-          put_change(changeset, :password_hash, hashpwsalt(password))
-      _ ->
-          changeset
-    end
+  @doc """
+  Updates a friend.
+
+  ## Examples
+
+      iex> update_friend(friend, %{field: new_value})
+      {:ok, %Friend{}}
+
+      iex> update_friend(friend, %{field: bad_value})
+      {:error, ...}
+
+  """
+  def update_friend(%Friend{} = friend, attrs) do
+    raise "TODO"
   end
 
+  @doc """
+  Deletes a Friend.
+
+  ## Examples
+
+      iex> delete_friend(friend)
+      {:ok, %Friend{}}
+
+      iex> delete_friend(friend)
+      {:error, ...}
+
+  """
+  def delete_friend(%Friend{} = friend) do
+    raise "TODO"
+  end
+
+  @doc """
+  Returns a data structure for tracking friend changes.
+
+  ## Examples
+
+      iex> change_friend(friend)
+      %Todo{...}
+
+  """
+  def change_friend(%Friend{} = friend) do
+    raise "TODO"
+  end
+
+  alias Twitterclone.User.Post
+
+  @doc """
+  Returns the list of posts.
+
+  ## Examples
+
+      iex> list_posts()
+      [%Post{}, ...]
+
+  """
+  def list_posts do
+    raise "TODO"
+  end
+
+  @doc """
+  Gets a single post.
+
+  Raises if the Post does not exist.
+
+  ## Examples
+
+      iex> get_post!(123)
+      %Post{}
+
+  """
+  def get_post!(id), do: raise "TODO"
+
+  @doc """
+  Creates a post.
+
+  ## Examples
+
+      iex> create_post(%{field: value})
+      {:ok, %Post{}}
+
+      iex> create_post(%{field: bad_value})
+      {:error, ...}
+
+  """
+  def create_post(attrs \\ %{}, user) do
+    %Post{message: attrs["message"], users_id: user.id}
+    |> Post.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a post.
+
+  ## Examples
+
+      iex> update_post(post, %{field: new_value})
+      {:ok, %Post{}}
+
+      iex> update_post(post, %{field: bad_value})
+      {:error, ...}
+
+  """
+  def update_post(%Post{} = post, attrs) do
+    raise "TODO"
+  end
+
+  @doc """
+  Deletes a Post.
+
+  ## Examples
+
+      iex> delete_post(post)
+      {:ok, %Post{}}
+
+      iex> delete_post(post)
+      {:error, ...}
+
+  """
+  def delete_post(%Post{} = post) do
+    raise "TODO"
+  end
+
+  @doc """
+  Returns a data structure for tracking post changes.
+
+  ## Examples
+
+      iex> change_post(post)
+      %Todo{...}
+
+  """
+  def change_post(%Post{} = post) do
+    raise "TODO"
+  end
 end
