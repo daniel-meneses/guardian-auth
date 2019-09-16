@@ -5,6 +5,7 @@ defmodule TwittercloneWeb.UserController do
   alias Twitterclone.Accounts.User
   alias Twitterclone.Guardian
   alias Twitterclone.Guardian.Plug
+  alias Twitterclone.User.Friend
 
   action_fallback TwittercloneWeb.FallbackController
 
