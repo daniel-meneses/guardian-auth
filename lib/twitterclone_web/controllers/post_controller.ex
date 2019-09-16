@@ -24,10 +24,10 @@ defmodule TwittercloneWeb.PostController do
         #post2 = Repo.get(Post, 7) |> Repo.preload(:users)
         conn
         |> put_status(:created)
-        render(conn, "show.json", message: post.message)
+        render(conn, "show.json", post: post2)
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
-        render(conn, "error.json", message: changeset)
+        render(conn, "error.json", post: changeset)
     end
   end
 
