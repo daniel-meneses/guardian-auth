@@ -21,7 +21,7 @@ defmodule TwittercloneWeb.PostController do
     user = Plug.current_resource(conn)
     case Accounts.create_post(params, user) do
       {:ok, post} ->
-        #post2 = Repo.get(Post, 7) |> Repo.preload(:users)
+        post2 = Repo.get(Post, 7) |> Repo.preload(:users)
         conn
         |> put_status(:created)
         render(conn, "show.json", post: post2)
