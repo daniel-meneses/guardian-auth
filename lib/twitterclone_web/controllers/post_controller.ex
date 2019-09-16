@@ -4,7 +4,7 @@ defmodule TwittercloneWeb.PostController do
   import Ecto.Query
   alias Twitterclone.Repo
   alias Twitterclone.Accounts
-  alias Twitterclone.Accounts.Post
+  alias Twitterclone.User.Post
   alias Twitterclone.Guardian.Plug
 
   def index(conn, _params) do
@@ -21,7 +21,7 @@ defmodule TwittercloneWeb.PostController do
     user = Plug.current_resource(conn)
     case Accounts.create_post(params, user) do
       {:ok, post} ->
-        post2 = Repo.get(Post, 7) |> Repo.preload(:users)
+        post2 = Repo.get(Post, 1) |> Repo.preload(:users)
         conn
         |> put_status(:created)
         render(conn, "show.json", post: post2)

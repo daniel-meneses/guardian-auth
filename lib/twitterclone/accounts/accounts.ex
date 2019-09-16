@@ -6,8 +6,8 @@ defmodule Twitterclone.Accounts do
   import Ecto
   import Ecto.Query, warn: false
   alias Twitterclone.Repo
-  alias Twitterclone.Accounts.User
-  alias Twitterclone.Accounts.Post
+  alias Twitterclone.User
+  alias Twitterclone.User.Post
   alias Twitterclone.Guardian
   alias Twitterclone.Guardian.Plug
 

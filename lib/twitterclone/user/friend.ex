@@ -1,6 +1,7 @@
 defmodule Twitterclone.User.Friend do
   use Ecto.Schema
   import Ecto.Changeset
+  
   alias Twitterclone.User.Friend
 
 

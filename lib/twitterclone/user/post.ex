@@ -1,13 +1,14 @@
-defmodule Twitterclone.Accounts.Post do
+defmodule Twitterclone.User.Post do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Twitterclone.Accounts.Post
+
+  alias Twitterclone.User.Post
 
   schema "posts" do
     field :likes, :integer
     field :message, :string
     field :views, :integer
-    belongs_to :users, Twitterclone.Accounts.User
+    belongs_to :users, Twitterclone.User
     timestamps()
   end
 

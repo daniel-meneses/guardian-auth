@@ -1,7 +1,7 @@
 defmodule TwittercloneWeb.FriendController do
   use TwittercloneWeb, :controller
 
-  alias Twitterclone.Accounts.User
+  alias Twitterclone.User
   alias Twitterclone.User.Friend
   alias Twitterclone.Guardian.Plug
 

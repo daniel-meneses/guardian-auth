@@ -4,7 +4,7 @@ defmodule TwittercloneWeb.SessionController do
   alias Twitterclone.Repo
   alias Twitterclone.Guardian.Plug
   alias Twitterclone.Guardian
-  alias Twitterclone.Accounts.User
+  alias Twitterclone.User
 
   def create(conn, params) do
     case authenticate(params) do

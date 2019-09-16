@@ -1,9 +1,9 @@
-defmodule Twitterclone.Accounts.User do
+defmodule Twitterclone.User do
   use Ecto.Schema
   import Ecto.Changeset
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
-  alias Twitterclone.Accounts.User
+  alias Twitterclone.User
 
   schema "users" do
     field :first_name, :string
@@ -12,7 +12,7 @@ defmodule Twitterclone.Accounts.User do
     field :password_hash, :string
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
-    has_many :posts, Twitterclone.Accounts.Post
+    has_many :posts, Twitterclone.User.Post
     timestamps()
   end
 
