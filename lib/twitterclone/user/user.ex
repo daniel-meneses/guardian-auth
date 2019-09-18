@@ -48,7 +48,7 @@ defmodule Twitterclone.User do
 
   """
   def create_post(attrs \\ %{}, user) do
-    %Post{message: attrs["message"], users_id: user.id}
+    %Post{message: attrs["message"], user_id: user.id}
     |> Post.changeset(attrs)
     |> Repo.insert()
   end
@@ -97,4 +97,21 @@ defmodule Twitterclone.User do
   def change_post(%Post{} = post) do
     raise "TODO"
   end
+
+
+  alias Twitterclone.User.Subscription
+
+  def create_subscribe(attrs \\ %{}) do
+    %Subscription{:user_id => 2, :subject_id => 1}
+    |> Repo.insert()
+  end
+
+  def update_subscribe(attrs \\ %{}) do
+    raise "TODO"
+  end
+
+  def delete_subscribe(attrs \\ %{}) do
+    raise "TODO"
+  end
+
 end

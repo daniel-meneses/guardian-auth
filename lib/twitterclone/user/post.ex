@@ -8,7 +8,7 @@ defmodule Twitterclone.User.Post do
     field :likes, :integer
     field :message, :string
     field :views, :integer
-    belongs_to :users, Twitterclone.Accounts.User
+    belongs_to :user, Twitterclone.Accounts.User
     timestamps()
   end
 

@@ -24,4 +24,10 @@ defmodule TwittercloneWeb.UserView do
       token_access: token_access
     }
   end
+
+  def render("subscribed.json", %{}) do
+      %{
+      data: "hey"
+    }
+  end
 end

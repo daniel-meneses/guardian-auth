@@ -12,7 +12,8 @@ defmodule Twitterclone.Accounts.User do
     field :password_hash, :string
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
-    has_many :posts, Twitterclone.User.Post
+    has_many :user_subscriptions, Twitterclone.User.Subscription, foreign_key: :user_id, references: :id
+    has_many :posts, Twitterclone.User.Post, foreign_key: :user_id, references: :id
     timestamps()
   end
 

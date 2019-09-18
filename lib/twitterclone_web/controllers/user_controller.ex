@@ -5,7 +5,8 @@ defmodule TwittercloneWeb.UserController do
   alias Twitterclone.Accounts.User
   alias Twitterclone.Guardian
   alias Twitterclone.Guardian.Plug
-  alias Twitterclone.User.Friend
+  alias Twitterclone.User.Follower
+#  alias Twitterclone.User
 
   action_fallback TwittercloneWeb.FallbackController
 
@@ -17,6 +18,21 @@ defmodule TwittercloneWeb.UserController do
            new_conn
            |> render("jwt.json", token_refresh: token_refresh, token_access: token_access, user: user)
     end
+  end
+
+  def subscribe(conn, params) do
+    params = %{:users_id => 2}
+    case Twitterclone.User.create_subscribe(params) do
+      {:ok, user} ->
+        conn
+        |> put_status(:created)
+        |> render("subscribed.json")
+      {:error} ->
+        conn
+        |> put_status(:unauthorized)
+        |> render("error.json")
+    end
+
   end
 
 end
