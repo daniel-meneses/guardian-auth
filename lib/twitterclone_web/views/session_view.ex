@@ -9,6 +9,13 @@ defmodule TwittercloneWeb.SessionView do
     }
   end
 
+  def render("show2.json", %{token_refresh: token_refresh, token_access: token_access}) do
+    %{
+      token_refresh: token_refresh,
+      token_access: token_access
+    }
+  end
+
   def render("refresh.json", %{token_access: token_access}) do
     %{
       token_access: token_access

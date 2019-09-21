@@ -5,6 +5,7 @@ defmodule Twitterclone.User do
 
   import Ecto.Query, warn: false
   alias Twitterclone.Repo
+  alias Twitterclone.Guardian.Plug
 
 
   alias Twitterclone.User.Post
@@ -112,6 +113,13 @@ defmodule Twitterclone.User do
 
   def delete_subscribe(attrs \\ %{}) do
     raise "TODO"
+  end
+
+  def get_subscribers_post(user) do
+    Post
+    |> where(user_id: ^user.id)
+    |> preload(:user)
+    |> Repo.all()
   end
 
 end

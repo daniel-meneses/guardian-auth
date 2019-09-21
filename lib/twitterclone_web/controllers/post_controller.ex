@@ -25,6 +25,29 @@ defmodule TwittercloneWeb.PostController do
     end
   end
 
+  def get_all(conn, params) do
+    user = Plug.current_resource(conn)
+    IO.puts "WE GOT HERE BABY"
+    array = Twitterclone.User.get_subscribers_post(user)
+    IO.inspect(array)
+    conn
+    |> put_status(:created)
+    render(conn, "subscriptions.json", posts: array)
+  end
+
+  def other(conn, params) do
+    user = Plug.current_resource(conn)
+    IO.puts "WE GOT HERE BABY"
+    case Twitterclone.User.get_subscribers_post(user) do
+      {:ok, all} ->
+        conn
+          render(conn, "error.json", post: "Success")
+      {:error, _} ->
+          conn
+          render(conn, "error.json", post: "Error hit")
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     post = User.get_post!(id)
     render(conn, "show.html", post: post)

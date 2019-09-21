@@ -76,38 +76,6 @@ defmodule Twitterclone.Accounts do
     User.changeset(user, %{})
   end
 
-  def token_sign_in(email, password) do
-    case email_password_auth(email, password) do
-      {:ok, user} ->
-        Guardian.encode_and_sign(user)
-      _ ->
-        {:error, :unauthorized}
-    end
-  end
-
-  defp email_password_auth(email, password) when is_binary(email) and is_binary(password) do
-    with {:ok, user} <- get_by_email(email),
-    do: verify_password(password, user)
-  end
-
-  defp get_by_email(email) when is_binary(email) do
-    case Repo.get_by(User, email: email) do
-      nil ->
-        dummy_checkpw()
-        {:error, "Login error."}
-      user ->
-        {:ok, user}
-    end
-  end
-
-  defp verify_password(password, %User{} = user) when is_binary(password) do
-    if checkpw(password, user.password_hash) do
-      {:ok, user}
-    else
-      {:error, :invalid_password}
-    end
-  end
-
   def create_post(attrs \\ %{}, user) do
     IO.inspect(i user)
     %Post{message: attrs["message"], user_id: user.id}
@@ -115,10 +83,38 @@ defmodule Twitterclone.Accounts do
     |> Repo.insert()
   end
 
-  def change_post(attrs) do
-
+  #SESSION
+  def create_session(params) do
+    case authenticate(params) do
+      {:ok, user} ->
+          {:ok, token_refresh, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "refresh")
+          {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
+          {:ok, user, token_refresh, token_access}
+        :error -> :error
+    end
   end
 
+  def authenticate(%{"email" => email, "password" => password}) do
+    user = Repo.get_by(User, email: String.downcase(email))
+    case check_password(user, password) do
+      true -> {:ok, user}
+      _ -> :error
+    end
+  end
 
+  defp check_password(user, password) do
+    case user do
+      nil -> Comeonin.Bcrypt.dummy_checkpw()
+      _ -> Comeonin.Bcrypt.checkpw(password, user.password_hash)
+    end
+  end
+
+  def update_session(user) do
+    case user do
+      nil -> nil
+      _ ->
+        {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
+    end
+  end
 
 end

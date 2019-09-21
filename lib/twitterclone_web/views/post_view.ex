@@ -17,9 +17,15 @@ defmodule TwittercloneWeb.PostView do
     }
   end
 
+  def render("subscriptions.json", %{posts: posts}) do
+    %{
+      data: render_many(posts, TwittercloneWeb.PostView, "show.json")
+    }
+  end
+
   def render("error.json", %{post: message}) do
     %{
-      post: "message"
+      post: message
     }
   end
 
