@@ -30,4 +30,11 @@ defmodule TwittercloneWeb.UserView do
       data: "hey"
     }
   end
+
+  def render("auth_error.json", %{error: error}) do
+    %{
+      error: error
+    }
+  end
+
 end

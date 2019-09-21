@@ -27,9 +27,7 @@ defmodule TwittercloneWeb.PostController do
 
   def get_all(conn, params) do
     user = Plug.current_resource(conn)
-    IO.puts "WE GOT HERE BABY"
     array = Twitterclone.User.get_subscribers_post(user)
-    IO.inspect(array)
     conn
     |> put_status(:created)
     render(conn, "subscriptions.json", posts: array)
@@ -37,7 +35,6 @@ defmodule TwittercloneWeb.PostController do
 
   def other(conn, params) do
     user = Plug.current_resource(conn)
-    IO.puts "WE GOT HERE BABY"
     case Twitterclone.User.get_subscribers_post(user) do
       {:ok, all} ->
         conn

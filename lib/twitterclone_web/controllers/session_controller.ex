@@ -1,13 +1,10 @@
 defmodule TwittercloneWeb.SessionController do
   use TwittercloneWeb, :controller
 
-  alias Twitterclone.Repo
-  alias Twitterclone.Guardian.Plug
-  alias Twitterclone.Guardian
-  alias Twitterclone.Accounts.User
+  alias Twitterclone.Accounts
 
   def create(conn, params) do
-    case Twitterclone.Accounts.create_session(params) do
+    case Accounts.create_session(params) do
       {:ok, user, token_refresh, token_access } ->
         conn
         |> put_status(:created)
@@ -20,16 +17,13 @@ defmodule TwittercloneWeb.SessionController do
   end
 
   def delete(conn, _) do
-    jwt = Guardian.Plug.current_token(conn)
-    Guardian.revoke(jwt) # doesn't actually do anything
     conn
     |> put_status(:ok)
     |> render("delete.json")
   end
 
   def refresh(conn, _params) do
-    user = Plug.current_resource(conn)
-    case Twitterclone.Accounts.update_session(user) do
+    case Accounts.refresh_token(conn) do
       {:ok, token_access, _claims} ->
       conn
       |> put_status(:ok)

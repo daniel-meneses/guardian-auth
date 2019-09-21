@@ -32,7 +32,16 @@ defmodule Twitterclone.Accounts do
   @doc """
   Creates a user.
   """
-  def create_user(attrs \\ %{}) do
+  def create_user(params) do
+    case user_changeset(params) do
+      {:ok, %User{} = user} ->
+          encode_tokens(user)
+      {:error,  error} ->
+          {:error,  error}
+    end
+  end
+
+  def user_changeset(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
@@ -63,18 +72,6 @@ defmodule Twitterclone.Accounts do
     Repo.delete(user)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
-  end
 
   def create_post(attrs \\ %{}, user) do
     IO.inspect(i user)
@@ -83,13 +80,17 @@ defmodule Twitterclone.Accounts do
     |> Repo.insert()
   end
 
+  #ENCODE JWT TOKENS
+  def encode_tokens(user) do
+    {:ok, token_refresh, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "refresh")
+    {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
+    {:ok, user, token_refresh, token_access}
+  end
+
   #SESSION
   def create_session(params) do
     case authenticate(params) do
-      {:ok, user} ->
-          {:ok, token_refresh, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "refresh")
-          {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
-          {:ok, user, token_refresh, token_access}
+      {:ok, user} -> encode_tokens(user)
         :error -> :error
     end
   end
@@ -109,11 +110,11 @@ defmodule Twitterclone.Accounts do
     end
   end
 
-  def update_session(user) do
+  def refresh_token(conn) do
+    user = Plug.current_resource(conn)
     case user do
       nil -> nil
-      _ ->
-        {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
+      _ -> {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
     end
   end
 
