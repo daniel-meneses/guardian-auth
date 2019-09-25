@@ -6,11 +6,6 @@ defmodule TwittercloneWeb.PostController do
   alias Twitterclone.User
   alias Twitterclone.Guardian.Plug
 
-  def index(conn, _params) do
-    posts = User.list_posts()
-    render(conn, "index.html", posts: posts)
-  end
-
   def create(conn, params) do
     user = Plug.current_resource(conn)
     case Twitterclone.User.create_post(params, user) do

@@ -2,16 +2,20 @@ defmodule Twitterclone.User.Subscription do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "user_subscriptions" do
+  alias Twitterclone.User.Subscription
+
+#  @primary_key {:uuid, :binary_id, autogenerate: true}
+  schema "subscriptions" do
+    field :accpeted, :boolean
     belongs_to :user, Twitterclone.Accounts.User
     belongs_to :subject, Twitterclone.Accounts.User
     timestamps()
   end
 
   @doc false
-  def changeset(subscription, attrs) do
+  def changeset(%Subscription{} = subscription, attrs) do
     subscription
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:user_id, :subject_id])
+    |> validate_required([:user_id, :subject_id])
   end
 end

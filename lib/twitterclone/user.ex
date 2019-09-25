@@ -10,6 +10,7 @@ defmodule Twitterclone.User do
 
   alias Twitterclone.User.Post
 
+
   @doc """
   Returns the list of posts.
 
@@ -102,10 +103,44 @@ defmodule Twitterclone.User do
 
   alias Twitterclone.User.Subscription
 
-  def create_subscribe(attrs \\ %{}) do
-    %Subscription{:user_id => 2, :subject_id => 1}
-    |> Repo.insert()
+  def create_subscription(conn, %{"user_id" => subject_id}) do
+    user = Plug.current_resource(conn)
+    attrs = %{:user_id => user.id, :subject_id => subject_id}
+    case Twitterclone.User.check_for_existing_request(attrs) do
+      true -> {:already_exists}
+        false ->
+          %Subscription{}
+          |> Subscription.changeset(attrs)
+          |> Repo.insert()
+    end
   end
+
+  def get_all_subscriptions(user_id) do
+    Repo.get!(Twitterclone.Accounts.User, user_id)
+    |> Repo.preload(:user_subscriptions)
+  end
+
+  def check_for_existing_request(%{:user_id => user_id, :subject_id => subject_id}) do
+    case Twitterclone.User.get_all_subscriptions(user_id) do
+      nil -> false
+      subs -> Enum.any?(subs.user_subscriptions, fn sub -> sub.subject_id == subject_id end)
+    end
+  end
+
+  def accept_reject_subscription(conn, %{"user_id" => subject_id, "accepted" => accepted}) do
+    user = Plug.current_resource(conn)
+    %Subscription{}
+    |> where(user_id: ^user.id)
+    |> where(subject_id: ^subject_id)
+    |> Ecto.Changeset.change(%{accepted: accepted})
+    |> Repo.update()
+  end
+
+  def delete_subscription(conn, %{"user_id" => subject_id, "accepted" => accepted}) do
+  end
+
+  #|> Ecto.Changeset.change(%{email: "hello@email.com"})
+  #|> MyApp.Repo.update()
 
   def update_subscribe(attrs \\ %{}) do
     raise "TODO"
