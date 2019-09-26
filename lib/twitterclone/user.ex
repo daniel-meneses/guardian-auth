@@ -116,7 +116,7 @@ defmodule Twitterclone.User do
   end
 
   def get_all_subscriptions(user_id) do
-    Repo.get!(Twitterclone.Accounts.User, user_id)
+    user = Repo.get!(Twitterclone.Accounts.User, user_id)
     |> Repo.preload(:user_subscriptions)
   end
 
@@ -136,7 +136,12 @@ defmodule Twitterclone.User do
     |> Repo.update()
   end
 
-  def delete_subscription(conn, %{"user_id" => subject_id, "accepted" => accepted}) do
+
+  def delete_subscription(conn, %{"user_id" => subject_id}) do
+    user = Plug.current_resource(conn)
+    sub = Repo.get_by!(Subscription, [user_id: user.id, subject_id: subject_id])
+    |> IO.inspect
+    Repo.delete(sub)
   end
 
   #|> Ecto.Changeset.change(%{email: "hello@email.com"})

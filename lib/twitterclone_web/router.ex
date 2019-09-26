@@ -35,6 +35,7 @@ defmodule TwittercloneWeb.Router do
     pipe_through [:api, :authenticate_access]
     post "/post", PostController, :create
     post "/subscribe", SubscriptionController, :create
+    delete "/subscribe", SubscriptionController, :delete
     post "/subscribe/update", SubscriptionController, :update
     get "/feed", PostController, :get_all
   end

@@ -4,9 +4,9 @@ defmodule Twitterclone.User.Subscription do
 
   alias Twitterclone.User.Subscription
 
-#  @primary_key {:uuid, :binary_id, autogenerate: true}
+  @primary_key false
   schema "subscriptions" do
-    field :accpeted, :boolean
+    field :accepted, :boolean
     belongs_to :user, Twitterclone.Accounts.User
     belongs_to :subject, Twitterclone.Accounts.User
     timestamps()
