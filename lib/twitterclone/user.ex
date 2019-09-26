@@ -140,8 +140,7 @@ defmodule Twitterclone.User do
   def delete_subscription(conn, %{"user_id" => subject_id}) do
     user = Plug.current_resource(conn)
     sub = Repo.get_by!(Subscription, [user_id: user.id, subject_id: subject_id])
-    |> IO.inspect
-    Repo.delete(sub)
+    |> Repo.delete()
   end
 
   #|> Ecto.Changeset.change(%{email: "hello@email.com"})

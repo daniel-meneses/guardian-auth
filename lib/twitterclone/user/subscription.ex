@@ -4,7 +4,6 @@ defmodule Twitterclone.User.Subscription do
 
   alias Twitterclone.User.Subscription
 
-  @primary_key false
   schema "subscriptions" do
     field :accepted, :boolean
     belongs_to :user, Twitterclone.Accounts.User

@@ -41,7 +41,7 @@ defmodule TwittercloneWeb.SubscriptionController do
 
   def delete(conn, params) do
     case User.delete_subscription(conn, params) do
-      {:ok} ->
+      {:ok, _} ->
         conn
         |> put_status(:created)
         |> render("created.json")
