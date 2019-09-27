@@ -5,7 +5,7 @@ defmodule Twitterclone.User.Subscription do
   alias Twitterclone.User.Subscription
 
   schema "subscriptions" do
-    field :accepted, :boolean
+    field :accepted, :boolean, default: false
     belongs_to :user, Twitterclone.Accounts.User
     belongs_to :subject, Twitterclone.Accounts.User
     timestamps()
@@ -16,5 +16,7 @@ defmodule Twitterclone.User.Subscription do
     subscription
     |> cast(attrs, [:user_id, :subject_id])
     |> validate_required([:user_id, :subject_id])
+    |> foreign_key_constraint(:subject_id)
+    |> unique_constraint(:unique_subscription, name: :unique_subscription_index)
   end
 end

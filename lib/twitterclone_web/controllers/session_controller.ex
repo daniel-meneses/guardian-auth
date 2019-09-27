@@ -4,15 +4,9 @@ defmodule TwittercloneWeb.SessionController do
   alias Twitterclone.Accounts
 
   def create(conn, params) do
-    case Accounts.create_session(params) do
-      {:ok, user, token_refresh, token_access } ->
-        conn
-        |> put_status(:created)
-        |> render("show.json", user: user, token_refresh: token_refresh, token_access: token_access)
-      :error ->
-        conn
-        |> put_status(:unauthorized)
-        |> render("error.json")
+    with {:ok, user, token_refresh, token_access } <- Accounts.create_session(params) do
+      conn |> put_status(:created)
+      |> render("show.json", user: user, token_refresh: token_refresh, token_access: token_access)
     end
   end
 

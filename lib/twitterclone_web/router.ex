@@ -37,7 +37,8 @@ defmodule TwittercloneWeb.Router do
     post "/subscribe", SubscriptionController, :create
     delete "/subscribe", SubscriptionController, :delete
     post "/subscribe/update", SubscriptionController, :update
-    get "/feed", PostController, :get_all
+    #get "/feed", PostController, :get_all
+    get "/feed", SubscriptionController, :index
   end
 
 end

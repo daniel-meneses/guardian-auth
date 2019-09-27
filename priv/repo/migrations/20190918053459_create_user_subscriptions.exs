@@ -8,7 +8,7 @@ defmodule Twitterclone.Repo.Migrations.CreateUserSubscriptions do
       add :accepted, :boolean
       timestamps()
     end
-    create unique_index(:subscriptions, [:user_id, :subject_id])
+    create unique_index(:subscriptions, [:user_id, :subject_id], name: :unique_subscription_index)
 
   end
 end

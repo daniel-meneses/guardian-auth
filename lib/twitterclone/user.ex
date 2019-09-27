@@ -106,19 +106,32 @@ defmodule Twitterclone.User do
   def create_subscription(conn, %{"user_id" => subject_id}) do
     user = Plug.current_resource(conn)
     attrs = %{:user_id => user.id, :subject_id => subject_id}
-    case Twitterclone.User.check_for_existing_request(attrs) do
-      true -> {:already_exists}
-        false ->
-          %Subscription{}
-          |> Subscription.changeset(attrs)
-          |> Repo.insert()
-    end
+    %Subscription{}
+    |> Subscription.changeset(attrs)
+    |> Repo.insert()
+  #  case Twitterclone.User.check_for_existing_request(attrs) do
+      #this check should be a changeset
+  #    true -> {:already_exists}
+  #      false ->
+  #        %Subscription{}
+  #        |> Subscription.changeset(attrs)
+  #        |> Repo.insert()
+  #  end
   end
 
   def get_all_subscriptions(user_id) do
     user = Repo.get!(Twitterclone.Accounts.User, user_id)
     |> Repo.preload(:user_subscriptions)
   end
+
+  def get_subscription_requests(conn) do
+    user = Plug.current_resource(conn)
+    from(s in Subscription, where: s.subject_id == ^user.id, where: is_nil(s.accepted))
+    |> Repo.all()
+    |> Repo.preload(:user)
+    |> IO.inspect()
+  end
+
 
   def check_for_existing_request(%{:user_id => user_id, :subject_id => subject_id}) do
     case Twitterclone.User.get_all_subscriptions(user_id) do
@@ -144,15 +157,14 @@ defmodule Twitterclone.User do
     end
   end
 
-  #|> Ecto.Changeset.change(%{email: "hello@email.com"})
-  #|> MyApp.Repo.update()
-
   def update_subscribe(attrs \\ %{}) do
     raise "TODO"
   end
 
-  def delete_subscribe(attrs \\ %{}) do
-    raise "TODO"
+  def delete_subscribe(conn, %{"user_id" => subject_id}) do
+    user = Plug.current_resource(conn)
+    sub = from(s in Subscription, where: s.subject_id == ^subject_id, where: s.user_id == ^user.id)
+    |> Repo.delete()
   end
 
   def get_subscribers_post(user) do
