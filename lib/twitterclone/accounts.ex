@@ -13,6 +13,12 @@ defmodule Twitterclone.Accounts do
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
+
+  def get_all_users() do
+    IO.puts "This hit"
+    Repo.all(Twitterclone.Accounts.User)
+  end
+
   @doc """
   Gets a single user.
 

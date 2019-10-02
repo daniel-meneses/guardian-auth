@@ -12,6 +12,8 @@
 
 alias Twitterclone.Repo
 alias Twitterclone.Accounts.User
+alias Twitterclone.User.Subscription
+
 
 Repo.insert! %User{
   first_name: "Daniel",
@@ -30,6 +32,5 @@ Repo.insert! %User{
 Repo.insert! %User{
   first_name: "Dang",
   last_name: "Man",
-  email: "dang@gmail.com",
-  password_hash: "anc"
+  email: "dang@gmail.com"
 }

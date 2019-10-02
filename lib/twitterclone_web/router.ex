@@ -20,7 +20,7 @@ defmodule TwittercloneWeb.Router do
 
   scope "/api/v1", TwittercloneWeb do
     pipe_through :api
-    resources "/users", UserController, only: [:create]
+    post "/users", UserController, :create
     post "/sessions", SessionController, :create
     delete "/sessions", SessionController, :delete
   end
@@ -39,6 +39,7 @@ defmodule TwittercloneWeb.Router do
     post "/subscribe/update", SubscriptionController, :update
     #get "/feed", PostController, :get_all
     get "/feed", SubscriptionController, :index
+    get "/users", UserController, :index
   end
 
 end

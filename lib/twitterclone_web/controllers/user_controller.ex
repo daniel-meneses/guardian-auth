@@ -12,4 +12,11 @@ defmodule TwittercloneWeb.UserController do
     end
   end
 
+  def index(conn, _) do
+    with users <- Accounts.get_all_users() do
+        conn
+      |> render("index.json", %{users: users})
+    end
+  end
+
 end

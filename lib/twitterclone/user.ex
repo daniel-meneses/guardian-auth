@@ -126,10 +126,9 @@ defmodule Twitterclone.User do
 
   def get_subscription_requests(conn) do
     user = Plug.current_resource(conn)
-    from(s in Subscription, where: s.subject_id == ^user.id, where: is_nil(s.accepted))
+    from(s in Subscription, where: s.subject_id == ^user.id, where: s.accepted == false)
     |> Repo.all()
     |> Repo.preload(:user)
-    |> IO.inspect()
   end
 
 
@@ -142,11 +141,9 @@ defmodule Twitterclone.User do
 
   def accept_reject_subscription(conn, %{"user_id" => subject_id, "accepted" => accepted}) do
     user = Plug.current_resource(conn)
-    case Repo.get_by(Subscription, [user_id: user.id, subject_id: subject_id]) do
-      nil -> {:error}
-      sub -> Ecto.Changeset.change(sub, %{accepted: accepted})
-              |> Repo.update()
-    end
+    sub = Repo.get_by!(Subscription, [user_id: subject_id, subject_id: user.id])
+    Ecto.Changeset.change(sub, %{accepted: accepted})
+    |> Repo.update()
   end
 
   def delete_subscription(conn, %{"user_id" => subject_id}) do

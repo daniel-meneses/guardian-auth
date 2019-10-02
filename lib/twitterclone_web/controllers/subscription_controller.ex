@@ -8,9 +8,8 @@ defmodule TwittercloneWeb.SubscriptionController do
 
   def index(conn, _params) do
     case User.get_subscription_requests(conn) do
-      user -> user
-        conn
-        |> render("created.json")
+      subscriptions ->
+       render(conn, "subscription_requests_list.json", %{subscriptions: subscriptions})
     end
   end
 
@@ -21,19 +20,8 @@ defmodule TwittercloneWeb.SubscriptionController do
   end
 
   def update(conn, params) do
-    case User.accept_reject_subscription(conn, params) do
-      {:ok} ->
-        conn
-        |> put_status(:created)
-        |> render("created.json")
-      {:error} ->
-        conn
-        |> put_status(:unauthorized)
-        |> render("error.json")
-      {:already_exists} ->
-        conn
-        |> put_status(:no_content)
-        |> render("already_exists.json")
+    with {:ok, _} <- User.accept_reject_subscription(conn, params) do
+      conn |> render("created.json")
     end
   end
 
