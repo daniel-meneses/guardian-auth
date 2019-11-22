@@ -2,7 +2,7 @@ defmodule TwittercloneWeb.UserController do
   use TwittercloneWeb, :controller
 
   alias Twitterclone.Accounts
-  alias Twitterclone.Accounts.User
+  #alias Twitterclone.Accounts.User
 
   action_fallback TwittercloneWeb.FallbackController
 
@@ -12,10 +12,17 @@ defmodule TwittercloneWeb.UserController do
     end
   end
 
+  #Use as fake search for now
   def index(conn, _) do
     with users <- Accounts.get_all_users() do
         conn
       |> render("index.json", %{users: users})
+    end
+  end
+
+  def show(conn, %{"id" => id}) do
+    with user <- Accounts.get_user!(id) do
+      render(conn, "show.json", %{user: user})
     end
   end
 

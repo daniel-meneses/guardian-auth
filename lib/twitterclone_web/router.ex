@@ -40,6 +40,7 @@ defmodule TwittercloneWeb.Router do
     #get "/feed", PostController, :get_all
     get "/feed", SubscriptionController, :index
     get "/users", UserController, :index
+    get "/user/:id", UserController, :show
   end
 
 end
