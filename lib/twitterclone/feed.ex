@@ -18,8 +18,10 @@ defmodule Twitterclone.Feed do
   end
 
   def guess() do
-
-    
+    Repo.all from p in Post,
+      join: a in assoc(p, :user_subscriptions),
+      where: a.name == "John Wayne",
+      preload: [actors: a]
   end
 
   def get_global_feed(user) do

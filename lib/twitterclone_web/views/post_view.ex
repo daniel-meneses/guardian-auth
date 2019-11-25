@@ -13,7 +13,9 @@ defmodule TwittercloneWeb.PostView do
       first_name: post.user.first_name,
       last_name: post.user.last_name,
       emal: post.user.email,
-      user_id: post.user.id
+      user_id: post.user.id,
+      id: post.id,
+      created: post.inserted_at
     }
   end
 
