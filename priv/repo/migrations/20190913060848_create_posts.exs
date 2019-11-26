@@ -5,7 +5,6 @@ defmodule Twitterclone.Repo.Migrations.CreatePosts do
     create table(:posts) do
       add :message, :string
       add :views, :integer
-      add :likes, :integer
       add :user_id, references(:users, on_delete: :nothing)
       timestamps()
     end

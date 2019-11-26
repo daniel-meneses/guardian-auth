@@ -171,4 +171,14 @@ defmodule Twitterclone.User do
     |> Repo.all()
   end
 
+  alias Twitterclone.User.Like
+
+  def create_like(conn, %{"post_id" => post_id}) do
+    user = Plug.current_resource(conn)
+    attrs = %{user_id: user.id, post_id: post_id}
+    %Like{}
+    |> Like.changeset(attrs)
+    |> Repo.insert()
+  end
+
 end
