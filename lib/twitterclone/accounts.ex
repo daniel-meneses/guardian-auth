@@ -15,7 +15,6 @@ defmodule Twitterclone.Accounts do
 
 
   def get_all_users() do
-    IO.puts "This hit"
     Repo.all(Twitterclone.Accounts.User)
   end
 
@@ -35,7 +34,7 @@ defmodule Twitterclone.Accounts do
   """
   def get_user!(id) do
     Repo.get!(User, id)
-    |> Repo.preload([:posts, posts: :user])
+    |> Repo.preload([:posts, posts: :user, posts: :likes])
   end
 
   @doc """

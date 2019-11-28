@@ -24,9 +24,8 @@ defmodule Twitterclone.Feed do
       preload: [actors: a]
   end
 
-  def get_global_feed(user) do
+  def get_global_feed() do
     Post
-    |> where(user_id: ^user.id)
     |> preload(:user)
     |> Repo.all()
   end

@@ -10,7 +10,7 @@ defmodule TwittercloneWeb.PostController do
     user = Plug.current_resource(conn)
     case Twitterclone.User.create_post(params, user) do
       {:ok, post} ->
-        post = post |> Repo.preload(:user)
+        post = post |> Repo.preload([:user, :likes])
         conn |> put_status(:created)
         render(conn, "show.json", post: post)
       {:error, %Ecto.Changeset{} = changeset} ->

@@ -181,4 +181,10 @@ defmodule Twitterclone.User do
     |> Repo.insert()
   end
 
+  def delete_like(conn, %{"post_id" => post_id}) do
+    user = Plug.current_resource(conn)
+    like = from(l in Like, where: l.user_id == ^user.id, where: l.post_id == ^post_id)
+    |> Repo.delete()
+  end
+
 end

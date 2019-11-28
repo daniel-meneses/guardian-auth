@@ -15,7 +15,8 @@ defmodule TwittercloneWeb.PostView do
       emal: post.user.email,
       user_id: post.user.id,
       id: post.id,
-      created: post.inserted_at
+      created: post.inserted_at,
+      likes: length(post.likes)
     }
   end
 
