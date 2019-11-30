@@ -82,7 +82,6 @@ defmodule Twitterclone.Accounts do
 
 
   def create_post(attrs \\ %{}, user) do
-    IO.inspect(i user)
     %Post{message: attrs["message"], user_id: user.id}
     |> Post.changeset(attrs)
     |> Repo.insert()

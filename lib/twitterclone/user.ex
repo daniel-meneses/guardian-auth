@@ -105,18 +105,10 @@ defmodule Twitterclone.User do
 
   def create_subscription(conn, %{"user_id" => subject_id}) do
     user = Plug.current_resource(conn)
-    attrs = %{:user_id => user.id, :subject_id => subject_id}
+  #  attrs = %{:user_id => user.id, :subject_id => subject_id}
     %Subscription{}
-    |> Subscription.changeset(attrs)
+    |> Subscription.changeset(%{:user_id => user.id, :subject_id => subject_id})
     |> Repo.insert()
-  #  case Twitterclone.User.check_for_existing_request(attrs) do
-      #this check should be a changeset
-  #    true -> {:already_exists}
-  #      false ->
-  #        %Subscription{}
-  #        |> Subscription.changeset(attrs)
-  #        |> Repo.insert()
-  #  end
   end
 
   def get_all_subscriptions(user_id) do
@@ -127,6 +119,13 @@ defmodule Twitterclone.User do
   def get_subscription_requests(conn) do
     user = Plug.current_resource(conn)
     from(s in Subscription, where: s.subject_id == ^user.id, where: s.accepted == false)
+    |> Repo.all()
+    |> Repo.preload(:user)
+  end
+
+  def get_all_follower_requests(conn) do
+    user = Plug.current_resource(conn)
+    from(s in Subscription, where: s.subject_id == ^user.id, where: is_nil(s.accepted))
     |> Repo.all()
     |> Repo.preload(:user)
   end
@@ -186,5 +185,7 @@ defmodule Twitterclone.User do
     like = from(l in Like, where: l.user_id == ^user.id, where: l.post_id == ^post_id)
     |> Repo.delete()
   end
+
+
 
 end

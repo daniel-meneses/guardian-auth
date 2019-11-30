@@ -11,7 +11,6 @@ defmodule TwittercloneWeb.FeedController do
     with feed <- Twitterclone.Feed.get_global_feed() do
       feed = feed |> Repo.preload(:likes)
       conn |> put_status(:created)
-      IO.inspect feed
       render(conn, "created.json", feed: feed)
     end
   end

@@ -14,7 +14,6 @@ defmodule Twitterclone.Feed do
   def get_all_subscription_users(id) do
     Repo.get!(User, id)
     |> Repo.preload(:user_subscriptions)
-    |> IO.inspect()
   end
 
   def guess() do
@@ -27,6 +26,7 @@ defmodule Twitterclone.Feed do
   def get_global_feed() do
     Post
     |> preload(:user)
+    |> reverse_order
     |> Repo.all()
   end
 
