@@ -25,4 +25,11 @@ defmodule TwittercloneWeb.FallbackController do
     |> put_status(:unauthorized)
     |> json(%{error: "Login error"})
   end
+
+  def call(conn, {:error}) do
+    conn
+    |> put_status(:not_found)
+    |> json(%{error: "Not found"})
+  end
+
 end

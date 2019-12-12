@@ -3,7 +3,7 @@ defmodule TwittercloneWeb.SessionView do
 
   def render("show.json", %{user: user, token_refresh: token_refresh, token_access: token_access}) do
     %{
-      data: render_one(user, TwittercloneWeb.UserView, "user.json"),
+      user: render_one(user, TwittercloneWeb.UserView, "user.json"),
       token_refresh: token_refresh,
       token_access: token_access
     }
