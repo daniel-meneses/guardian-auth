@@ -6,16 +6,29 @@ defmodule TwittercloneWeb.SubscriptionController do
 
   action_fallback TwittercloneWeb.FallbackController
 
-  def index(conn, _params) do
+  def index2(conn, _params) do
     case User.get_subscription_requests(conn) do
       subscriptions ->
        render(conn, "subscription_requests_list.json", %{subscriptions: subscriptions})
     end
   end
 
+  def index(conn, params) do
+    case User.get_pending_subscription_requests(conn) do
+      subscriptions ->
+        subscriptions = Enum.map(subscriptions, fn x -> x.subject_id end)
+        conn |> render("subscription_request_id.json", %{ids: subscriptions})
+    end
+  end
+
   def create(conn, params) do
     with {:ok, sub} <- User.create_subscription(conn, params) do
-      conn |> put_status(:created) |> render("created.json")
+    #  conn |> put_status(:created) |> render("created.json")
+      case User.get_pending_subscription_requests(conn) do
+        subscriptions ->
+          subscriptions = Enum.map(subscriptions, fn x -> x.subject_id end)
+          conn |> render("subscription_request_id.json", %{ids: subscriptions})
+      end
     end
   end
 

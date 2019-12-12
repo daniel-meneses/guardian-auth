@@ -7,7 +7,7 @@ defmodule Twitterclone.Repo.Migrations.CreateLikes do
       add :post_id, references(:posts, on_delete: :nothing)
       timestamps()
     end
-  #  create unique_index(:likes, [:user_id, :post_id], name: :unique_like_index)
+    create unique_index(:likes, [:user_id, :post_id], name: :unique_like_index)
 
   end
 end

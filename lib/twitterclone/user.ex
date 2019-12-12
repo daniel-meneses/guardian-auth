@@ -118,9 +118,15 @@ defmodule Twitterclone.User do
 
   def get_subscription_requests(conn) do
     user = Plug.current_resource(conn)
-    from(s in Subscription, where: s.subject_id == ^user.id, where: s.accepted == false)
+    from(s in Subscription, where: s.user_id == ^user.id, where: s.accepted == false)
     |> Repo.all()
     |> Repo.preload(:user)
+  end
+
+  def get_pending_subscription_requests(conn) do
+    user = Plug.current_resource(conn)
+    from(s in Subscription, where: s.user_id == ^user.id, where: s.accepted == false)
+    |> Repo.all()
   end
 
   def get_all_follower_requests(conn) do

@@ -30,7 +30,7 @@ defmodule TwittercloneWeb.UserView do
 
   def render("jwt.json", %{token_refresh: token_refresh, token_access: token_access, user: user}) do
     %{
-      data: render_one(user, UserView, "user.json"),
+      user: render_one(user, UserView, "user.json"),
       token_refresh: token_refresh,
       token_access: token_access
     }

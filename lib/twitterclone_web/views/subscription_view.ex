@@ -26,4 +26,8 @@ defmodule TwittercloneWeb.SubscriptionView do
      }
   end
 
+  def render("subscription_request_id.json", %{ids: ids}) do
+    ( ids )
+  end
+
 end
