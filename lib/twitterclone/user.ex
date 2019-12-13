@@ -178,6 +178,7 @@ defmodule Twitterclone.User do
 
   alias Twitterclone.User.Like
 
+  # Create a like
   def create_like(conn, %{"post_id" => post_id}) do
     user = Plug.current_resource(conn)
     attrs = %{user_id: user.id, post_id: post_id}
@@ -186,12 +187,38 @@ defmodule Twitterclone.User do
     |> Repo.insert()
   end
 
+  # Given user id, get all likes
+  def get_all_user_likes(conn) do
+    user = Plug.current_resource(conn)
+    likes = from(l in Like, where: l.user_id == ^user.id)
+    |> Repo.all()
+  end
+
+  # Create a like & return array of liked post ids
+  # Used by client side to determine what UI to show
+  def create_like_and_return_all_posts(conn, post) do
+    case create_like(conn, post) do
+      nil -> {:error}
+      like -> return_like_ids(conn)
+    end
+  end
+
+  def return_like_ids(conn) do
+    case get_all_user_likes(conn) do
+      nil -> {:error}
+      arr -> return_array_of_post_ids(arr)
+    end
+  end
+
+  def return_array_of_post_ids(arr) do
+    Enum.map(arr, fn x -> x.post_id end)
+  end
+
   def delete_like(conn, %{"post_id" => post_id}) do
     user = Plug.current_resource(conn)
     like = from(l in Like, where: l.user_id == ^user.id, where: l.post_id == ^post_id)
     |> Repo.delete()
   end
-
 
 
 end
