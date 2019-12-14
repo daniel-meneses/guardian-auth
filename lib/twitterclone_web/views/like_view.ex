@@ -10,7 +10,7 @@ defmodule TwittercloneWeb.LikeView do
   end
 
   def render("deleted.json", %{}) do
-    %{ like: "Success" }
+    %{ like: "Deleted" }
   end
 
 end

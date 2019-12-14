@@ -19,8 +19,8 @@ defmodule TwittercloneWeb.LikeController do
   end
 
   def delete(conn, params) do
-    with {:ok, _} <- User.delete_like(conn, params) do
-      render(conn, "deleted.json")
+    with like_ids <- User.delete_like(conn, params) do
+      render(conn, "array_of_like_ids.json", ids: like_ids)
     end
   end
 
