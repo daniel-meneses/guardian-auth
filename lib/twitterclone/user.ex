@@ -10,6 +10,12 @@ defmodule Twitterclone.User do
   alias Twitterclone.User.Post
 
   @doc """
+  Get user from connection
+  """
+  def get_user_id(conn) do
+    Plug.current_resource(conn)
+  end
+  @doc """
   Gets a single post.
   """
   def get_post!(id), do: raise "TODO"
@@ -96,51 +102,49 @@ defmodule Twitterclone.User do
   alias Twitterclone.User.Like
 
   @doc """
-  Gets a single post.
+  Gets all user likes
+  """
+  def get_all_likes(conn) do
+    Repo.all from l in Like,
+      where: l.user_id == ^get_user_id(conn).id
+  end
+
+  @doc """
+  Create a user like.
   """
   def create_like(conn, %{"post_id" => post_id}) do
-    user = Plug.current_resource(conn)
-    attrs = %{user_id: user.id, post_id: post_id}
-    %Like{}
-    |> Like.changeset(attrs)
-    |> Repo.insert()
+    attr = %{user_id: get_user_id(conn).id, post_id: post_id}
+    Like.changeset(%Like{}, attr)
+    |> Repo.insert
   end
 
-  # Given user id, get all likes
-  def get_all_user_likes(conn) do
-    user = Plug.current_resource(conn)
-    likes = from(l in Like, where: l.user_id == ^user.id)
-    |> Repo.all()
+  @doc """
+  Delete a user like.
+  """
+  def delete_like(conn, %{"post_id" => post_id}) do
+    Repo.get_by!(Like, [user_id: get_user_id(conn).id, post_id: post_id])
+    |> Repo.delete
   end
 
-  # Create a like & return array of liked post ids
-  # Used by client side to determine what UI to show
+  @doc """
+  Delete a user like.
+  """
   def create_like_and_return_all_posts(conn, post) do
     case create_like(conn, post) do
       nil -> {:error}
-      like -> return_like_ids(conn)
+      like -> return_array_like_ids(conn)
     end
   end
 
-  def return_like_ids(conn) do
-    case get_all_user_likes(conn) do
+  def return_array_like_ids(conn) do
+    case get_all_likes(conn) do
       nil -> {:error}
       arr -> return_array_of_post_ids(arr)
     end
   end
 
-  def return_array_of_post_ids(arr) do
+  defp return_array_of_post_ids(arr) do
     Enum.map(arr, fn x -> x.post_id end)
   end
-
-  def delete_like(conn, %{"post_id" => post_id}) do
-    user = Plug.current_resource(conn)
-    like = Repo.get_by!(Like, [user_id: user.id, post_id: post_id])
-    case Repo.delete(like) do
-      {:ok, _} -> return_like_ids(conn)
-      {:error} -> IO.puts "Hey"
-    end
-  end
-
 
 end

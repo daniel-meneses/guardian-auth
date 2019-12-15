@@ -7,20 +7,20 @@ defmodule TwittercloneWeb.LikeController do
   action_fallback TwittercloneWeb.FallbackController
 
   def index(conn, _params) do
-    with like_ids <- User.return_like_ids(conn) do
+    with like_ids <- User.return_array_like_ids(conn) do
       render(conn, "array_of_like_ids.json", ids: like_ids)
     end
   end
 
   def create(conn, params) do
-    with like_ids <- User.create_like_and_return_all_posts(conn, params) do
-      conn |> put_status(:created) |> render("array_of_like_ids.json", ids: like_ids)
+    with {:ok, like} <- User.create_like(conn, params) do
+      render(conn, "created.json", post_id: like.post_id)
     end
   end
 
   def delete(conn, params) do
-    with like_ids <- User.delete_like(conn, params) do
-      render(conn, "array_of_like_ids.json", ids: like_ids)
+    with {:ok, like} <- User.delete_like(conn, params) do
+      render(conn, "deleted.json", post_id: like.post_id)
     end
   end
 
