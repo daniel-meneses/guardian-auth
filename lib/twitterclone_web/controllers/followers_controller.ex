@@ -7,8 +7,8 @@ defmodule TwittercloneWeb.FollowersController do
 
   action_fallback TwittercloneWeb.FallbackController
 
-  def index(conn, _) do
-    with followers <- User.get_pending_followers(conn) do
+  def index(conn, params) do
+    with followers <- User.get_followers(conn, params) do
       render(conn, "index.json", followers: followers)
     end
   end

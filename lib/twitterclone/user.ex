@@ -57,8 +57,8 @@ defmodule Twitterclone.User do
   end
 
   # %{"accepted" => accepted}
-  def get_pending_followers(conn) do
-    from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id,
+  def get_followers(conn, %{"accepted" => accepted}) do
+    sub = from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id,
                             join: u in assoc(s, :user),
                             where: is_nil(s.accepted),
                             preload: [user: u])
