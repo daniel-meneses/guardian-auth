@@ -3,6 +3,8 @@ defmodule TwittercloneWeb.SessionController do
 
   alias Twitterclone.Accounts
 
+  action_fallback TwittercloneWeb.FallbackController
+
   def create(conn, params) do
     with {:ok, user, token_refresh, token_access } <- Accounts.create_session(params) do
       conn |> put_status(:created)

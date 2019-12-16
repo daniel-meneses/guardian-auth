@@ -3,11 +3,8 @@ defmodule Twitterclone.User do
   The User context.
   """
   import Ecto.Query, warn: false
-  alias Twitterclone.Repo
-  alias Twitterclone.Guardian.Plug
-
-
-  alias Twitterclone.User.Post
+  alias Twitterclone.{Repo, Guardian.Plug}
+  alias Twitterclone.User.{Post, Like, Subscription}
 
   @doc """
   Get user from connection
@@ -15,6 +12,7 @@ defmodule Twitterclone.User do
   def get_user_id(conn) do
     Plug.current_resource(conn)
   end
+
   @doc """
   Gets a single post.
   """
@@ -23,25 +21,26 @@ defmodule Twitterclone.User do
   @doc """
   Creates a post.
   """
-  def create_post(attrs \\ %{}, user) do
-    %Post{message: attrs["message"], user_id: user.id}
-    |> Post.changeset(attrs)
+  def create_post(conn, %{"message" => message}) do
+    attrs = %{user_id: get_user_id(conn).id, message: message}
+    Post.changeset(%Post{}, attrs)
     |> Repo.insert()
   end
 
-  alias Twitterclone.User.Subscription
-
   def create_subscription(conn, %{"user_id" => subject_id}) do
-    user = Plug.current_resource(conn)
-  #  attrs = %{:user_id => user.id, :subject_id => subject_id}
-    %Subscription{}
-    |> Subscription.changeset(%{:user_id => user.id, :subject_id => subject_id})
+    attrs = %{:user_id => get_user_id(conn).id, :subject_id => subject_id}
+    Subscription.changeset(%Subscription{}, attrs)
     |> Repo.insert()
   end
 
   def get_all_subscriptions(user_id) do
-    user = Repo.get!(Twitterclone.Accounts.User, user_id)
+    user = Repo.get!(User, user_id)
     |> Repo.preload(:user_subscriptions)
+  end
+
+  def get_subscriptions(conn) do
+    from(s in Subscription, where: s.user_id == ^get_user_id(conn).id, preload: [s: :user])
+    |> Repo.all()
   end
 
   def get_subscription_requests(conn) do
@@ -57,11 +56,23 @@ defmodule Twitterclone.User do
     |> Repo.all()
   end
 
-  def get_all_follower_requests(conn) do
-    user = Plug.current_resource(conn)
-    from(s in Subscription, where: s.subject_id == ^user.id, where: is_nil(s.accepted))
+  def get_followers(conn, %{"accepted" => accepted}) do
+    from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id,
+                            join: u in assoc(s, :user),
+                            where: s.accepted == ^accepted,
+                            preload: [user: u]
+                        #    select: {s.user_id},
+                            )
     |> Repo.all()
-    |> Repo.preload(:user)
+  end
+
+  def get_subscription(%{"id" => id}) do
+    Repo.get!(Subscription, id)
+  end
+
+  def update_follow_request(subscription, %{"accepted" => accepted}) do
+    Ecto.Changeset.change(subscription, %{accepted: accepted})
+    |> Repo.update()
   end
 
   def check_for_existing_request(%{:user_id => user_id, :subject_id => subject_id}) do
@@ -79,34 +90,28 @@ defmodule Twitterclone.User do
   end
 
   def delete_subscription(conn, %{"user_id" => subject_id}) do
-    user = Plug.current_resource(conn)
-    case Repo.get_by(Subscription, [user_id: user.id, subject_id: subject_id]) do
+    case Repo.get_by(Subscription, [user_id: get_user_id(conn).id, subject_id: subject_id]) do
       nil -> {:error}
       sub -> Repo.delete(sub)
     end
   end
 
   def delete_subscribe(conn, %{"user_id" => subject_id}) do
-    user = Plug.current_resource(conn)
-    sub = from(s in Subscription, where: s.subject_id == ^subject_id, where: s.user_id == ^user.id)
+    from(s in Subscription, where: s.subject_id == ^subject_id, where: s.user_id == ^get_user_id(conn).id)
     |> Repo.delete()
   end
 
   def get_subscribers_post(user) do
-    Post
-    |> where(user_id: ^user.id)
-    |> preload(:user)
+    from(p in Post, where: p.user_id == ^user.id, join: u in assoc(p, :user), preload: [user: u])
     |> Repo.all()
   end
-
-  alias Twitterclone.User.Like
 
   @doc """
   Gets all user likes
   """
   def get_all_likes(conn) do
-    Repo.all from l in Like,
-      where: l.user_id == ^get_user_id(conn).id
+    from(l in Like, where: l.user_id == ^get_user_id(conn).id)
+    |> Repo.all
   end
 
   @doc """
@@ -127,23 +132,9 @@ defmodule Twitterclone.User do
   end
 
   @doc """
-  Delete a user like.
+  Return array of liked post ids.
   """
-  def create_like_and_return_all_posts(conn, post) do
-    case create_like(conn, post) do
-      nil -> {:error}
-      like -> return_array_like_ids(conn)
-    end
-  end
-
-  def return_array_like_ids(conn) do
-    case get_all_likes(conn) do
-      nil -> {:error}
-      arr -> return_array_of_post_ids(arr)
-    end
-  end
-
-  defp return_array_of_post_ids(arr) do
+  def return_liked_post_ids(arr) do
     Enum.map(arr, fn x -> x.post_id end)
   end
 

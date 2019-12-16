@@ -15,8 +15,9 @@ defmodule Twitterclone.User.Post do
   @doc false
   def changeset(%Post{} = post, attrs) do
     post
-    |> cast(attrs, [:message, :views])
-    |> validate_required([:message])
+    |> cast(attrs, [:message, :user_id])
+    |> validate_required([:message, :user_id])
     |> validate_length(:message, max: 256)
+    |> foreign_key_constraint(:user_id)
   end
 end

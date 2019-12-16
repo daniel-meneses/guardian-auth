@@ -6,18 +6,25 @@ defmodule TwittercloneWeb.FollowersController do
 
   action_fallback TwittercloneWeb.FallbackController
 
-
+  #Accepts ?accepted=bool
   def index(conn, params) do
-    with array <- User.get_all_follower_requests(conn) do
-      conn
-      |> put_status(:ok)
-      render(conn, "subscriptions.json", posts: array)
+    with followers <- User.get_followers(conn, params) do
+      render(conn, "index.json", followers: followers)
     end
   end
 
-  def update(conn, params) do
+  def update2(conn, params) do
     with  _ <- User.accept_reject_subscription(conn, params) do
       conn |> render("created.json")
+    end
+  end
+
+  # Do i need to add a user check?
+  def update(conn, params) do
+    with subscription <- User.get_subscription(params) do
+      with _ <- User.update_follow_request(subscription, params) do
+        conn |> render("created.json")
+      end
     end
   end
 

@@ -7,8 +7,10 @@ defmodule TwittercloneWeb.LikeController do
   action_fallback TwittercloneWeb.FallbackController
 
   def index(conn, _params) do
-    with like_ids <- User.return_array_like_ids(conn) do
-      render(conn, "array_of_like_ids.json", ids: like_ids)
+    with likes <- User.get_all_likes(conn) do
+      with post_ids <- User.return_liked_post_ids(likes) do
+        render(conn, "array_of_liked_post_ids.json", ids: post_ids)
+      end
     end
   end
 

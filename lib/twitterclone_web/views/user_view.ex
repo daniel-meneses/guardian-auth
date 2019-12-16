@@ -18,6 +18,12 @@ defmodule TwittercloneWeb.UserView do
       last_name: user.last_name}
   end
 
+  def render("public_user.json", %{user: user}) do
+    %{id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name}
+  end
+
   def render("user_profile.json", %{user: user}) do
     %{id: user.id,
       email: user.email,

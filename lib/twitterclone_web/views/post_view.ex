@@ -26,9 +26,9 @@ defmodule TwittercloneWeb.PostView do
     }
   end
 
-  def render("error.json", %{post: message}) do
+  def render("error.json", _) do
     %{
-      post: message
+      error:  "error"
     }
   end
 

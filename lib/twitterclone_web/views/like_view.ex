@@ -1,7 +1,7 @@
 defmodule TwittercloneWeb.LikeView do
   use TwittercloneWeb, :view
 
-  def render("array_of_like_ids.json", %{ids: ids}) do
+  def render("array_of_liked_post_ids.json", %{ids: ids}) do
     (ids)
   end
 

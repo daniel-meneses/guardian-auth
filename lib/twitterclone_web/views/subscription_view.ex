@@ -3,8 +3,16 @@ defmodule TwittercloneWeb.SubscriptionView do
 
   alias TwittercloneWeb.SubscriptionView
 
-  def render("created.json", %{}) do
+  def render("created2.json", %{}) do
     %{ data: "Subscription request successful" }
+  end
+
+  def render("created.json", %{subscription: sub}) do
+    %{ id: sub.id,
+       subject_id: sub.subject_id,
+       user_id: sub.user_id,
+       accepted: sub.accepted
+   }
   end
 
   def render("error.json", %{}) do
