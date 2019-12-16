@@ -10,6 +10,7 @@ defmodule TwittercloneWeb.FollowersView do
        id: follower.id,
        user: render_one(follower.user, TwittercloneWeb.UserView, "public_user.json", as: :user)
      }
- end
+  end
+
 
 end

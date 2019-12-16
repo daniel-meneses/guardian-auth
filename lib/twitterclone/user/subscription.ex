@@ -5,7 +5,7 @@ defmodule Twitterclone.User.Subscription do
   alias Twitterclone.User.Subscription
 
   schema "subscriptions" do
-    field :accepted, :boolean, default: false
+    field :accepted, :boolean, default: nil
     belongs_to :user, Twitterclone.Accounts.User
     belongs_to :subject, Twitterclone.Accounts.User
     timestamps()

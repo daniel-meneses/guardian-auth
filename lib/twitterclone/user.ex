@@ -56,13 +56,20 @@ defmodule Twitterclone.User do
     |> Repo.all()
   end
 
-  def get_followers(conn, %{"accepted" => accepted}) do
+  # %{"accepted" => accepted}
+  def get_pending_followers(conn) do
     from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id,
                             join: u in assoc(s, :user),
-                            where: s.accepted == ^accepted,
-                            preload: [user: u]
-                        #    select: {s.user_id},
-                            )
+                            where: is_nil(s.accepted),
+                            preload: [user: u])
+    |> Repo.all()
+  end
+
+  def get_accepted_followers(conn, params) do
+    from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id,
+                            join: u in assoc(s, :user),
+                            where: s.accepted == true,
+                            preload: [user: u])
     |> Repo.all()
   end
 

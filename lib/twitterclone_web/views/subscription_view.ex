@@ -15,6 +15,14 @@ defmodule TwittercloneWeb.SubscriptionView do
    }
   end
 
+  def render("show.json", %{subscription: sub}) do
+    %{ id: sub.id,
+       subject_id: sub.subject_id,
+       user_id: sub.user_id,
+       accepted: sub.accepted
+   }
+  end
+
   def render("error.json", %{}) do
     %{ data: "Subscription request failed" }
   end
