@@ -8,7 +8,7 @@ defmodule TwittercloneWeb.PostController do
 
   def create(conn, params) do
     with {:ok, post} <- Twitterclone.User.create_post(conn, params) do
-      post |> Repo.preload([:user, :likes])
+      post = post |> Repo.preload([:user, :likes])
       render(conn, "show.json", post: post)
     end
   end
