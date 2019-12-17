@@ -13,14 +13,11 @@ defmodule TwittercloneWeb.FollowersController do
     end
   end
 
-  # Do i need to add a user check?
   def update(conn, params) do
-    with subscription <- User.get_subscription(params) do
-      with {:ok, sub} <- User.update_follow_request(subscription, params) do
-        conn
-        |> put_view(SubscriptionView)
-        |> render("show.json", subscription: sub)
-      end
+    with {:ok, sub} <- User.update_follow_request(conn, params) do
+      conn
+      |> put_view(SubscriptionView)
+      |> render("show.json", subscription: sub)
     end
   end
 

@@ -1,36 +1,20 @@
 defmodule TwittercloneWeb.SubscriptionController do
   use TwittercloneWeb, :controller
 
-  alias Twitterclone.User
-  alias Twitterclone.Guardian.Plug
+  alias Twitterclone.{Guardian.Plug, User}
 
   action_fallback TwittercloneWeb.FallbackController
 
-  def index2(conn, params) do
-    case User.get_pending_subscription_requests(conn) do
-      subscriptions ->
-        subscriptions = Enum.map(subscriptions, fn x -> x.subject_id end)
-        conn |> render("subscription_request_id.json", %{ids: subscriptions})
-    end
-  end
-
   def index(conn, params) do
-    case User.get_pending_subscription_requests(conn) do
-      subscriptions ->
-        subscriptions = Enum.map(subscriptions, fn x -> x.subject_id end)
-        conn |> render("subscription_request_id.json", %{ids: subscriptions})
-    end
+    with subs <- User.get_subscriptions(conn, params) do
+      IO.inspect subs
+        render(conn, "created2.json")
+      end
   end
 
   def create(conn, params) do
     with {:ok, sub} <- User.create_subscription(conn, params) do
       conn |> put_status(:created) |> render("created.json", %{subscription: sub})
-    end
-  end
-
-  def update(conn, params) do
-    with {:ok, _} <- User.accept_reject_subscription(conn, params) do
-      conn |> render("created.json")
     end
   end
 

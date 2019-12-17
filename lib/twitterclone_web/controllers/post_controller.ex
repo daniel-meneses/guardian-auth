@@ -13,16 +13,4 @@ defmodule TwittercloneWeb.PostController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    post = User.get_post!(id)
-    render(conn, "show.html", post: post)
-  end
-
-  def delete(conn, %{"id" => id}) do
-    post = User.get_post!(id)
-    {:ok, _post} = User.delete_post(post)
-    conn
-    |> put_flash(:info, "Post deleted successfully.")
-    |> redirect(to: Routes.post_path(conn, :index))
-  end
 end

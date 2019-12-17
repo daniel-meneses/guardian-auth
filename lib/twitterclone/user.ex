@@ -3,20 +3,16 @@ defmodule Twitterclone.User do
   The User context.
   """
   import Ecto.Query, warn: false
+  import Ecto.Type
   alias Twitterclone.{Repo, Guardian.Plug}
   alias Twitterclone.User.{Post, Like, Subscription}
 
   @doc """
   Get user from connection
   """
-  def get_user_id(conn) do
+  defp get_user_id(conn) do
     Plug.current_resource(conn)
   end
-
-  @doc """
-  Gets a single post.
-  """
-  def get_post!(id), do: raise "TODO"
 
   @doc """
   Creates a post.
@@ -27,85 +23,63 @@ defmodule Twitterclone.User do
     |> Repo.insert()
   end
 
+  @doc """
+  Get my subscriptions
+  ?accepted=boolean
+  """
+  def get_subscriptions(conn, params) do
+    sub_query(conn)
+    |> where(^filter_accepted(params))
+    |> Repo.all()
+  end
+
+  defp sub_query(conn) do
+    from(s in Subscription, where: s.user_id == ^get_user_id(conn).id)
+  end
+
+  defp filter_accepted(params) do
+    case cast(:boolean, params["accepted"]) do
+      {:ok, accepted} -> dynamic([q], q.accepted==^accepted)
+               :error -> dynamic([q], is_nil(q.accepted))
+    end
+  end
+
   def create_subscription(conn, %{"user_id" => subject_id}) do
     attrs = %{:user_id => get_user_id(conn).id, :subject_id => subject_id}
     Subscription.changeset(%Subscription{}, attrs)
     |> Repo.insert()
   end
 
-  def get_all_subscriptions(user_id) do
-    user = Repo.get!(User, user_id)
-    |> Repo.preload(:user_subscriptions)
-  end
-
-  def get_subscriptions(conn) do
-    from(s in Subscription, where: s.user_id == ^get_user_id(conn).id, preload: [s: :user])
-    |> Repo.all()
-  end
-
-  def get_subscription_requests(conn) do
-    user = Plug.current_resource(conn)
-    from(s in Subscription, where: s.user_id == ^user.id, where: s.accepted == false)
-    |> Repo.all()
-    |> Repo.preload(:user)
-  end
-
-  def get_pending_subscription_requests(conn) do
-    user = Plug.current_resource(conn)
-    from(s in Subscription, where: s.user_id == ^user.id, where: s.accepted == false)
-    |> Repo.all()
-  end
-
-  # %{"accepted" => accepted}
-  def get_followers(conn, %{"accepted" => accepted}) do
-    sub = from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id,
-                            join: u in assoc(s, :user),
-                            where: is_nil(s.accepted),
-                            preload: [user: u])
-    |> Repo.all()
-  end
-
-  def get_accepted_followers(conn, params) do
-    from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id,
-                            join: u in assoc(s, :user),
-                            where: s.accepted == true,
-                            preload: [user: u])
-    |> Repo.all()
-  end
-
-  def get_subscription(%{"id" => id}) do
-    Repo.get!(Subscription, id)
-  end
-
-  def update_follow_request(subscription, %{"accepted" => accepted}) do
-    Ecto.Changeset.change(subscription, %{accepted: accepted})
-    |> Repo.update()
-  end
-
-  def check_for_existing_request(%{:user_id => user_id, :subject_id => subject_id}) do
-    case Twitterclone.User.get_all_subscriptions(user_id) do
-      nil -> false
-      subs -> Enum.any?(subs.user_subscriptions, fn sub -> sub.subject_id == subject_id end)
-    end
-  end
-
-  def accept_reject_subscription(conn, %{"user_id" => subject_id, "accepted" => accepted}) do
-    user = Plug.current_resource(conn)
-    sub = Repo.get_by!(Subscription, [user_id: subject_id, subject_id: user.id])
-    Ecto.Changeset.change(sub, %{accepted: accepted})
-    |> Repo.update()
-  end
-
   def delete_subscription(conn, %{"user_id" => subject_id}) do
-    case Repo.get_by(Subscription, [user_id: get_user_id(conn).id, subject_id: subject_id]) do
-      nil -> {:error}
-      sub -> Repo.delete(sub)
+    sub_query(conn)
+    |> where([q], q.subject_id == ^subject_id)
+    |> Repo.delete()
+  end
+
+  defp followers_query(conn) do
+    from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id)
+  end
+
+  def get_followers(conn, params) do
+    followers_query(conn)
+    |> where(^filter_accepted(params))
+    |> join(:left, [u], _ in assoc(u, :user))
+    |> preload([u], :user)
+    |> Repo.all()
+  end
+
+  def update_follow_request(conn, %{"accepted" => accepted} = params) do
+    case get_follow_request(conn, params) do
+        follow -> Ecto.Changeset.change(follow, %{accepted: accepted})
+                   |> Repo.update()
+             _ -> :error
     end
   end
 
-  def delete_subscribe(conn, %{"user_id" => subject_id}) do
-    from(s in Subscription, where: s.subject_id == ^subject_id, where: s.user_id == ^get_user_id(conn).id)
-    |> Repo.delete()
+  defp get_follow_request(conn, %{"id" => id}) do
+    followers_query(conn)
+    |> where([q], q.id == ^id)
+    |> Repo.one()
   end
 
   def get_subscribers_post(user) do
