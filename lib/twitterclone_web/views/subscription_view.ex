@@ -1,49 +1,22 @@
 defmodule TwittercloneWeb.SubscriptionView do
   use TwittercloneWeb, :view
 
-  alias TwittercloneWeb.SubscriptionView
+  alias TwittercloneWeb.{SubscriptionView, UserView}
 
-  def render("created2.json", %{}) do
-    %{ data: "Subscription request successful" }
+  def render("created.json", %{sub: sub}) do
+    %{ data: render_one(sub, SubscriptionView, "show.json", as: :sub) }
   end
 
-  def render("created.json", %{subscription: sub}) do
+  def render("index.json", %{subs: subs}) do
+    %{ data: render_many(subs, SubscriptionView, "show.json", as: :sub)}
+  end
+
+  def render("show.json", %{sub: sub}) do
     %{ id: sub.id,
-       subject_id: sub.subject_id,
-       user_id: sub.user_id,
-       accepted: sub.accepted
-   }
-  end
-
-  def render("show.json", %{subscription: sub}) do
-    %{ id: sub.id,
-       subject_id: sub.subject_id,
-       user_id: sub.user_id,
-       accepted: sub.accepted
-   }
-  end
-
-  def render("error.json", %{}) do
-    %{ data: "Subscription request failed" }
-  end
-
-  def render("already_exists.json", %{}) do
-    %{ data: "Subscription request already exists" }
-  end
-
-  def render("subscription_requests_list.json", %{subscriptions: subscriptions}) do
-    %{ data: render_many(subscriptions, SubscriptionView, "subscription_requests.json")}
-  end
-
-  def render("subscription_requests.json", %{subscription: subscription}) do
-    %{ id: subscription.user.id,
-       first_name: subscription.user.first_name,
-       last_name: subscription.user.last_name
+       subject: render_one(sub.subject, UserView, "public_user.json", as: :user),
+       inserted_at: sub.inserted_at,
+       updated_at: sub.updated_at
      }
-  end
-
-  def render("subscription_request_id.json", %{ids: ids}) do
-    ( ids )
   end
 
 end

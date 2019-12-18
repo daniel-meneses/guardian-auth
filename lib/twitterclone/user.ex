@@ -14,6 +14,10 @@ defmodule Twitterclone.User do
     Plug.current_resource(conn)
   end
 
+  defp user_id_filter(conn) do
+    dynamic([q], q.user_id==^get_user_id(conn).id)
+  end
+
   @doc """
   Creates a post.
   """
@@ -30,17 +34,20 @@ defmodule Twitterclone.User do
   def get_subscriptions(conn, params) do
     sub_query(conn)
     |> where(^filter_accepted(params))
+    |> join(:left, [q], _ in assoc(q, :subject))
+    |> preload([q], :subject)
     |> Repo.all()
   end
 
   defp sub_query(conn) do
-    from(s in Subscription, where: s.user_id == ^get_user_id(conn).id)
+    from(s in Subscription, where: ^user_id_filter(conn))
   end
 
   defp filter_accepted(params) do
     case cast(:boolean, params["accepted"]) do
-      {:ok, accepted} -> dynamic([q], q.accepted==^accepted)
-               :error -> dynamic([q], is_nil(q.accepted))
+        {:ok, nil} -> dynamic([q], is_nil(q.accepted))
+        {:ok, accepted} -> dynamic([q], q.accepted==^accepted)
+          :error -> false
     end
   end
 
@@ -82,8 +89,8 @@ defmodule Twitterclone.User do
     |> Repo.one()
   end
 
-  def get_subscribers_post(user) do
-    from(p in Post, where: p.user_id == ^user.id, join: u in assoc(p, :user), preload: [user: u])
+  def get_subscribers_post(conn) do
+    from(p in Post, where: ^user_id_filter(conn), join: u in assoc(p, :user), preload: [user: u])
     |> Repo.all()
   end
 
@@ -91,7 +98,7 @@ defmodule Twitterclone.User do
   Gets all user likes
   """
   def get_all_likes(conn) do
-    from(l in Like, where: l.user_id == ^get_user_id(conn).id)
+    from(l in Like, where: ^user_id_filter(conn))
     |> Repo.all
   end
 
