@@ -7,7 +7,7 @@ defmodule TwittercloneWeb.SubscriptionController do
 
   def index(conn, params) do
     with subs <- User.get_subscriptions(conn, params) do
-        render(conn, "index.json", %{subs: subs})
+        render(conn, "data_map.json", %{subs: subs})
       end
   end
 

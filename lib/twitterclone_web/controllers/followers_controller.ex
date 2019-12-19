@@ -9,7 +9,7 @@ defmodule TwittercloneWeb.FollowersController do
 
   def index(conn, params) do
     with followers <- User.get_followers(conn, params) do
-      render(conn, "index.json", followers: followers)
+      render(conn, "data_map.json", followers: followers)
     end
   end
 
