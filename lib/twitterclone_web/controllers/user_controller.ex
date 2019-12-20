@@ -2,7 +2,6 @@ defmodule TwittercloneWeb.UserController do
   use TwittercloneWeb, :controller
 
   alias Twitterclone.Accounts
-  #alias Twitterclone.Accounts.User
 
   action_fallback TwittercloneWeb.FallbackController
 
