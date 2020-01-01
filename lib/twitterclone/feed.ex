@@ -42,24 +42,25 @@ defmodule Twitterclone.Feed do
     |> Repo.all()
   end
 
+  def get_user_feed(%{"id" => id}) do
+    {products, kerosene} =
+      Post
+      |> where([p], p.user_id == ^id)
+      |> preload(:likes)
+      |> preload(:user)
+      |> reverse_order
+      |> Repo.paginate()
+  end
+
   def get_user_feed(conn, user_id) do
     Repo.all from p in Post,
       where: p.user_id == ^user_id,
       preload: [:user]
   end
 
-  def get_feed(conn, %{"user_id" => user_id}) do
-    Post
-    |> preload(:user)
-    |> reverse_order
-    |> Repo.all()
-  end
 
-  def get_feed(conn, %{"user_id" => user_id}) do
-    Post
-    |> preload(:user)
-    |> reverse_order
-    |> Repo.all()
-  end
+ #render(conn, "index.html", products: products, kerosene: kerosene)
+
+
 
 end

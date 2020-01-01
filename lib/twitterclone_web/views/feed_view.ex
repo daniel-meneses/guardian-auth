@@ -1,5 +1,6 @@
 defmodule TwittercloneWeb.FeedView do
   use TwittercloneWeb, :view
+  import Kerosene.JSON
 
   alias TwittercloneWeb.{PostView, TypeConverter}
 
@@ -7,13 +8,16 @@ defmodule TwittercloneWeb.FeedView do
     %{ data: render_many(feed, PostView, "show.json", as: :post) }
   end
 
-  def render("data_map.json", %{feed: feed}) do
+  def render("data_map.json", %{feed: feed, kerosene: kerosene, conn: conn}) do
     maps = render_many(feed, PostView, "show2.json", as: :post)
     %{ list: render_many(feed, PostView, "post_id.json", as: :post),
-       data_map: TypeConverter.maplist_to_map(maps)
+       data_map: TypeConverter.maplist_to_map(maps),
+       pagination: paginate(conn, kerosene)
      }
   end
 
-  
+
+
+
 
 end
