@@ -47,7 +47,7 @@ defmodule TwittercloneWeb.Router do
     get "/global_feed", FeedController, :index
     get "/followers", FollowersController, :index
     post "/followers/update", FollowersController, :update
-
+    get "/feed/:id", FeedController, :index
   end
 
 end

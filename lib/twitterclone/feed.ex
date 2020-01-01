@@ -11,6 +11,17 @@ defmodule Twitterclone.Feed do
   alias Twitterclone.Guardian
   alias Twitterclone.Guardian.Plug
 
+  @doc """
+  Get user from connection
+  """
+  defp get_user_id(conn) do
+    Plug.current_resource(conn)
+  end
+
+  defp user_id_filter(conn) do
+    dynamic([q], q.user_id==^get_user_id(conn).id)
+  end
+
   def get_all_subscription_users(id) do
     Repo.get!(User, id)
     |> Repo.preload(:user_subscriptions)
@@ -21,9 +32,30 @@ defmodule Twitterclone.Feed do
       join: a in assoc(p, :user_subscriptions),
       where: a.name == "John Wayne",
       preload: [actors: a]
+    Post
   end
 
   def get_global_feed() do
+    Post
+    |> preload(:user)
+    |> reverse_order
+    |> Repo.all()
+  end
+
+  def get_user_feed(conn, user_id) do
+    Repo.all from p in Post,
+      where: p.user_id == ^user_id,
+      preload: [:user]
+  end
+
+  def get_feed(conn, %{"user_id" => user_id}) do
+    Post
+    |> preload(:user)
+    |> reverse_order
+    |> Repo.all()
+  end
+
+  def get_feed(conn, %{"user_id" => user_id}) do
     Post
     |> preload(:user)
     |> reverse_order
