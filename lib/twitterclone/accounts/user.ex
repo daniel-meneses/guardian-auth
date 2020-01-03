@@ -31,6 +31,7 @@ defmodule Twitterclone.Accounts.User do
   end
 
   # Private method for adding hashed password
+  @doc false
   defp put_password_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}}

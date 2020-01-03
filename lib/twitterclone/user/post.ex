@@ -20,4 +20,6 @@ defmodule Twitterclone.User.Post do
     |> validate_length(:message, max: 256)
     |> foreign_key_constraint(:user_id)
   end
+
+  
 end

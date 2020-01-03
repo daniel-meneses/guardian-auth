@@ -4,7 +4,7 @@ defmodule Twitterclone.User do
   """
   import Ecto.Query, warn: false
   import Ecto.Type
-  alias Twitterclone.{Repo, Guardian.Plug}
+  alias Twitterclone.{Repo, Guardian, Guardian.Plug}
   alias Twitterclone.User.{Post, Like, Subscription}
 
   @doc """

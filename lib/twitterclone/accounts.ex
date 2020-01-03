@@ -1,36 +1,16 @@
 defmodule Twitterclone.Accounts do
   @moduledoc """
   The Accounts context.
+  Serves as public API for managing users, user authentication, and user preferences.
   """
-  import IEx.Helpers
-  import Ecto
-  import Ecto.Query, warn: false
-  alias Twitterclone.Repo
-  alias Twitterclone.Accounts.User
-  alias Twitterclone.User.Post
-  alias Twitterclone.Guardian
-  alias Twitterclone.Guardian.Plug
+  alias Twitterclone.{Repo, Guardian}
+  alias Twitterclone.Accounts.{User, UserAuthentication, UserSession}
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
-
-  def get_all_users() do
-    Repo.all(Twitterclone.Accounts.User)
-  end
-
   @doc """
   Gets a single user.
-
   Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
   """
   def get_user!(id) do
     Repo.get!(User, id)
@@ -38,91 +18,41 @@ defmodule Twitterclone.Accounts do
   end
 
   @doc """
-  Creates a user.
+  Create a user.
+  On success, return user struct with access, refresh tokens.
+  On fail, return changeset error.
   """
   def create_user(params) do
-    case user_changeset(params) do
-      {:ok, %User{} = user} ->
-          encode_tokens(user)
-      {:error,  error} ->
-          {:error,  error}
+    with {:ok, user} <- UserAuthentication.user_changeset(params) do
+      encode_tokens(user)
     end
   end
 
-  def user_changeset(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
-  end
-
   @doc """
-  Updates a user.
-
-  ## Examples
-
-      iex> update_user(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
+  Sign user in.
+  On success, return user struct with access, refresh tokens.
+  On fail, return error.
   """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
+  def create_session(params) do
+    with {:ok, user} <- UserSession.sign_in(params) do
+      encode_tokens(user)
+    end
   end
-
   @doc """
-  Deletes a User.
+  Accepts refresh token and returns access token on success.
+  Returns __ on fail.
   """
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
+  def refresh_token(conn) do
+    with user <- Guardian.current_user(conn) do
+      {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
+    end
   end
 
-
-  def create_post(attrs \\ %{}, user) do
-    %Post{message: attrs["message"], user_id: user.id}
-    |> Post.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  #ENCODE JWT TOKENS
-  def encode_tokens(user) do
+  @doc false
+  defp encode_tokens(user) do
     {:ok, token_refresh, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "refresh")
     {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
     {:ok, user, token_refresh, token_access}
-  end
-
-  #SESSION
-  def create_session(params) do
-    case authenticate(params) do
-      {:ok, user} -> encode_tokens(user)
-        :error -> :error
-    end
-  end
-
-  def authenticate(%{"email" => email, "password" => password}) do
-    user = Repo.get_by(User, email: String.downcase(email))
-    case check_password(user, password) do
-      true -> {:ok, user}
-      _ -> :error
-    end
-  end
-
-  defp check_password(user, password) do
-    case user do
-      nil -> Comeonin.Bcrypt.dummy_checkpw()
-      _ -> Comeonin.Bcrypt.checkpw(password, user.password_hash)
-    end
-  end
-
-  def refresh_token(conn) do
-    user = Plug.current_resource(conn)
-    case user do
-      nil -> nil
-      _ -> {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
-    end
   end
 
 end
