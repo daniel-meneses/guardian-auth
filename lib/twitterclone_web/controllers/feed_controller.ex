@@ -7,19 +7,15 @@ defmodule TwittercloneWeb.FeedController do
 
   action_fallback TwittercloneWeb.FallbackController
 
-  def index(conn, params) do
-    IO.inspect "this hit"
-    with {feed, kerosene}  <- Twitterclone.Feed.get_user_feed(params) do
+  def index(conn, %{"id" => id} = params) do
+    with {feed, kerosene} <- Twitterclone.Feed.get_user_feed(params) do
       render(conn, "data_map.json", feed: feed, kerosene: kerosene)
     end
   end
 
   def index(conn, params) do
-    IO.inspect "this hit2"
-    with feed <- Twitterclone.Feed.get_global_feed() do
-      feed = feed |> Repo.preload(:likes)
-      conn |> put_status(:created)
-      render(conn, "data_map.json", feed: feed)
+    with {feed, kerosene} <- Twitterclone.Feed.get_global_feed() do
+      render(conn, "data_map.json", feed: feed, kerosene: kerosene)
     end
   end
 

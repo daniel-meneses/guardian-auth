@@ -27,19 +27,13 @@ defmodule Twitterclone.Feed do
     |> Repo.preload(:user_subscriptions)
   end
 
-  def guess() do
-    Repo.all from p in Post,
-      join: a in assoc(p, :user_subscriptions),
-      where: a.name == "John Wayne",
-      preload: [actors: a]
-    Post
-  end
-
   def get_global_feed() do
+    {products, kerosene} =
     Post
     |> preload(:user)
+    |> preload(:likes)
     |> reverse_order
-    |> Repo.all()
+    |> Repo.paginate()
   end
 
   def get_user_feed(%{"id" => id}) do
@@ -51,15 +45,6 @@ defmodule Twitterclone.Feed do
       |> reverse_order
       |> Repo.paginate()
   end
-
-  def get_user_feed(conn, user_id) do
-    Repo.all from p in Post,
-      where: p.user_id == ^user_id,
-      preload: [:user]
-  end
-
-
- #render(conn, "index.html", products: products, kerosene: kerosene)
 
 
 
