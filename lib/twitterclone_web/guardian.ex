@@ -2,9 +2,9 @@ defmodule Twitterclone.Guardian do
   use Guardian, otp_app: :twitterclone
 
   alias Twitterclone.Accounts
-  alias Twitterclone.Guardian.Plug
 
   def subject_for_token(user, _claims) do
+    IO.inspect user
     sub = to_string(user.id)
     {:ok, sub}
   end
@@ -21,14 +21,6 @@ defmodule Twitterclone.Guardian do
 
   def resource_from_claims(_claims) do
     {:error, :reason_for_error}
-  end
-
-  def current_user(conn) do
-    if Plug.current_resource(conn) do
-      Plug.current_resource(conn)
-    else
-      :error
-    end
   end
 
 end

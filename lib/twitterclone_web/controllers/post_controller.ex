@@ -7,7 +7,7 @@ defmodule TwittercloneWeb.PostController do
   action_fallback TwittercloneWeb.FallbackController
 
   def create(conn, params) do
-    with {:ok, post} <- Twitterclone.User.create_post(conn, params) do
+    with {:ok, post} <- Twitterclone.UserDevice.create_post(conn, params) do
       post = post |> Repo.preload([:user, :likes])
       render(conn, "show.json", post: post)
     end

@@ -20,17 +20,13 @@ defmodule TwittercloneWeb.Router do
 
   scope "/api/v1", TwittercloneWeb do
     pipe_through :api
-    post "/accounts/user", AccountsUserController, :create
-    post "/accounts/session", AccountsSessionController, :create
-    post "/sessions", SessionController, :create
-    delete "/sessions", SessionController, :delete
+    resources "/accounts/user", AccountsUserController, only: [:create, :delete]
+    resources "/accounts/session", AccountsSessionController, only: [:create, :delete]
   end
 
-  # refresh token
   scope "/api/v1", TwittercloneWeb do
     pipe_through [:api, :authenticate_refresh]
-    post "/sessions/refresh", SessionController, :refresh
-    post "/accounts/refresh", SessionController, :refresh
+    resources "/accounts/refresh", AccountsRefreshController, only: [:create]
   end
 
   scope "/api/v1", TwittercloneWeb do

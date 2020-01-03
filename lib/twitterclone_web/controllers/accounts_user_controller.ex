@@ -5,12 +5,6 @@ defmodule TwittercloneWeb.AccountsUserController do
 
   action_fallback TwittercloneWeb.FallbackController
 
-  """
-    create - > creates new user
-    delete -> deletes new user
-    update -> update some value in user struct
-  """
-
   def create(conn, %{"user" => user_params}) do
     with {:ok, user, token_refresh, token_access } <- Accounts.create_user(user_params) do
       render(conn, "jwt.json", token_refresh: token_refresh, token_access: token_access, user: user)

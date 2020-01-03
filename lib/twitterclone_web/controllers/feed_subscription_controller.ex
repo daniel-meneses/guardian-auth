@@ -8,7 +8,7 @@ defmodule TwittercloneWeb.FeedSubscriptionController do
 
   def index(conn, params) do
     user = Plug.current_resource(conn)
-    array = Twitterclone.User.get_subscribers_post(user.id)
+    array = Twitterclone.UserDevice.get_subscribers_post(user.id)
     conn
     |> put_status(:created)
     render(conn, "subscriptions.json", posts: array)

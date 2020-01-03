@@ -1,13 +1,14 @@
-defmodule Twitterclone.User.Subscription do
+defmodule Twitterclone.UserDevice.Subscription do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Twitterclone.User.Subscription
+  alias Twitterclone.UserDevice.Subscription
+  alias Twitterclone.Accounts.User
 
   schema "subscriptions" do
     field :accepted, :boolean, default: nil
-    belongs_to :user, Twitterclone.Accounts.User
-    belongs_to :subject, Twitterclone.Accounts.User
+    belongs_to :user, User
+    belongs_to :subject, User
     timestamps()
   end
 

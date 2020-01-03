@@ -1,28 +1,28 @@
-defmodule Twitterclone.User do
+defmodule Twitterclone.UserDevice do
   @moduledoc """
   The User context.
   """
   import Ecto.Query, warn: false
   import Ecto.Type
   alias Twitterclone.{Repo, Guardian, Guardian.Plug}
-  alias Twitterclone.User.{Post, Like, Subscription}
+  alias Twitterclone.UserDevice.{Post, Like, Subscription}
 
   @doc """
   Get user from connection
   """
   defp get_user_id(conn) do
-    Plug.current_resource(conn)
+    Plug.current_resource(conn).id
   end
 
   defp user_id_filter(conn) do
-    dynamic([q], q.user_id==^get_user_id(conn).id)
+    dynamic([q], q.user_id==^get_user_id(conn))
   end
 
   @doc """
   Creates a post.
   """
   def create_post(conn, %{"message" => message}) do
-    attrs = %{user_id: get_user_id(conn).id, message: message}
+    attrs = %{user_id: get_user_id(conn), message: message}
     Post.changeset(%Post{}, attrs)
     |> Repo.insert()
   end
@@ -52,7 +52,7 @@ defmodule Twitterclone.User do
   end
 
   def create_subscription(conn, %{"user_id" => subject_id}) do
-    attrs = %{:user_id => get_user_id(conn).id, :subject_id => subject_id}
+    attrs = %{:user_id => get_user_id(conn), :subject_id => subject_id}
     Subscription.changeset(%Subscription{}, attrs)
     |> Repo.insert()
   end
@@ -64,7 +64,7 @@ defmodule Twitterclone.User do
   end
 
   defp followers_query(conn) do
-    from(s in Subscription, where: s.subject_id == ^get_user_id(conn).id)
+    from(s in Subscription, where: s.subject_id == ^get_user_id(conn))
   end
 
   def get_followers(conn, params) do
@@ -106,7 +106,7 @@ defmodule Twitterclone.User do
   Create a user like.
   """
   def create_like(conn, %{"post_id" => post_id}) do
-    attr = %{user_id: get_user_id(conn).id, post_id: post_id}
+    attr = %{user_id: get_user_id(conn), post_id: post_id}
     Like.changeset(%Like{}, attr)
     |> Repo.insert
   end
@@ -115,7 +115,7 @@ defmodule Twitterclone.User do
   Delete a user like.
   """
   def delete_like(conn, %{"post_id" => post_id}) do
-    Repo.get_by!(Like, [user_id: get_user_id(conn).id, post_id: post_id])
+    Repo.get_by!(Like, [user_id: get_user_id(conn), post_id: post_id])
     |> Repo.delete
   end
 

@@ -3,7 +3,7 @@ defmodule Twitterclone.Accounts do
   The Accounts context.
   Serves as public API for managing users, user authentication, and user preferences.
   """
-  alias Twitterclone.{Repo, Guardian}
+  alias Twitterclone.{Repo, Guardian, Guardian.Plug}
   alias Twitterclone.Accounts.{User, UserAuthentication, UserSession}
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
@@ -43,7 +43,7 @@ defmodule Twitterclone.Accounts do
   Returns __ on fail.
   """
   def refresh_token(conn) do
-    with user <- Guardian.current_user(conn) do
+    with user <- Plug.current_resource(conn) do
       {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
     end
   end
