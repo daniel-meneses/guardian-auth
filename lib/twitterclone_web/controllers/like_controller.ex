@@ -1,4 +1,4 @@
-defmodule TwittercloneWeb.LikeController do
+defmodule TwittercloneWeb.UserDeviceLikeController do
   use TwittercloneWeb, :controller
 
   alias Twitterclone.UserDevice
