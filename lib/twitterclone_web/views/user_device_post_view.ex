@@ -1,11 +1,7 @@
-defmodule TwittercloneWeb.PostView do
+defmodule TwittercloneWeb.UserDevice.PostView do
   use TwittercloneWeb, :view
 
-
-
-  def render("created.json", %{post: message}) do
-    %{ post: message }
-  end
+  alias TwittercloneWeb.UserDevice.PostView
 
   def render("show.json", %{post: post}) do
     %{
@@ -36,7 +32,7 @@ defmodule TwittercloneWeb.PostView do
 
   def render("subscriptions.json", %{posts: posts}) do
     %{
-      data: render_many(posts, TwittercloneWeb.PostView, "show.json")
+      data: render_many(posts, PostView, "show.json")
     }
   end
 

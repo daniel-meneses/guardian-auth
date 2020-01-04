@@ -1,10 +1,12 @@
-defmodule TwittercloneWeb.FollowersView do
+defmodule TwittercloneWeb.UserDevice.FollowerView do
   use TwittercloneWeb, :view
 
-  alias TwittercloneWeb.{UserView, FollowersView, TypeConverter}
+  alias TwittercloneWeb.TypeConverter
+  alias TwittercloneWeb.Accounts.UserView
+  alias TwittercloneWeb.UserDevice.FollowerView
 
   def render("index.json", %{followers: followers}) do
-    %{ data: render_many(followers, FollowersView, "show.json", as: :follow)}
+    %{ data: render_many(followers, FollowerView, "show.json", as: :follow)}
   end
 
   def render("show.json", %{follow: follow}) do
@@ -18,8 +20,8 @@ defmodule TwittercloneWeb.FollowersView do
   end
 
   def render("data_map.json", %{followers: followers}) do
-    maps = render_many(followers, FollowersView, "show.json", as: :follow)
-    %{ list: render_many(followers, FollowersView, "follow_id.json", as: :follow),
+    maps = render_many(followers, FollowerView, "show.json", as: :follow)
+    %{ list: render_many(followers, FollowerView, "follow_id.json", as: :follow),
        data_map: TypeConverter.maplist_to_map(maps)
      }
   end

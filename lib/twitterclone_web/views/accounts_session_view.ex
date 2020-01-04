@@ -1,9 +1,11 @@
-defmodule TwittercloneWeb.AccountsSessionView do
+defmodule TwittercloneWeb.Accounts.SessionView do
   use TwittercloneWeb, :view
+
+  alias TwittercloneWeb.Accounts.UserView
 
   def render("show.json", %{user: user, token_refresh: token_refresh, token_access: token_access}) do
     %{
-      user: render_one(user, TwittercloneWeb.UserView, "user.json"),
+      user: render_one(user, UserView, "user.json"),
       token_refresh: token_refresh,
       token_access: token_access
     }

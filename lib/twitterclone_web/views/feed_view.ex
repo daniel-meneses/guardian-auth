@@ -2,7 +2,8 @@ defmodule TwittercloneWeb.FeedView do
   use TwittercloneWeb, :view
   import Kerosene.JSON
 
-  alias TwittercloneWeb.{PostView, TypeConverter}
+  alias TwittercloneWeb.TypeConverter
+  alias TwittercloneWeb.UserDevice.PostView
 
   def render("created.json", %{feed: feed}) do
     %{ data: render_many(feed, PostView, "show.json", as: :post) }

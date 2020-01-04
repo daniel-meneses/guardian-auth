@@ -1,8 +1,7 @@
-defmodule TwittercloneWeb.FollowersController do
+defmodule TwittercloneWeb.UserDevice.FollowerController do
   use TwittercloneWeb, :controller
 
-  alias Twitterclone.{Guardian.Plug, Repo, UserDevice}
-  alias TwittercloneWeb.SubscriptionView
+  alias Twitterclone.{Repo, UserDevice}
 
   action_fallback TwittercloneWeb.FallbackController
 
@@ -12,7 +11,7 @@ defmodule TwittercloneWeb.FollowersController do
     end
   end
 
-  def update(conn, params) do
+  def create(conn, params) do
     with {:ok, follow} <- UserDevice.update_follow_request(conn, params) do
       render(conn, "show.json", follow: follow |> Repo.preload(:user))
     end

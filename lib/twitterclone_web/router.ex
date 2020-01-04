@@ -18,29 +18,26 @@ defmodule TwittercloneWeb.Router do
     plug Twitterclone.Guardian.AuthPipeline
   end
 
-  scope "/api/v1", TwittercloneWeb do
+  scope "/api/v1/accounts", TwittercloneWeb.Accounts do
     pipe_through :api
-    resources "/accounts/user", AccountsUserController, only: [:create, :delete]
-    resources "/accounts/session", AccountsSessionController, only: [:create, :delete]
-  end
-
-  scope "/api/v1", TwittercloneWeb do
-    pipe_through [:api, :authenticate_refresh]
-    resources "/accounts/refresh", AccountsRefreshController, only: [:create]
+    resources "/user", UserController, only: [:create, :delete]
+    resources "/session", SessionController, only: [:create, :delete]
+    pipe_through :authenticate_refresh
+    resources "/refresh", RefreshController, only: [:create]
   end
 
   scope "/api/v1", TwittercloneWeb do
     pipe_through [:api, :authenticate_access]
-    resources "/like", UserDeviceLikeController, only: [:index, :create, :delete]
-    post "/post", PostController, :create
-    get "/subscribe", SubscriptionController, :index
-    get "/subscription", SubscriptionController, :index
-    post "/subscribe", SubscriptionController, :create
-    delete "/subscribe", SubscriptionController, :delete
     get "/global_feed", FeedController, :index
-    get "/followers", FollowersController, :index
-    post "/followers/update", FollowersController, :update
     get "/feed/:id", FeedController, :index
+  end
+
+  scope "/api/v1/user_device", TwittercloneWeb.UserDevice do
+    pipe_through [:api, :authenticate_access]
+    resources "/post", PostController, only: [:create]
+    resources "/like", LikeController, only: [:index, :create, :delete]
+    resources "/subscription", SubscriptionController, only: [:index, :create, :delete]
+    resources "/follower", FollowerController, only: [:index, :create]
   end
 
 end

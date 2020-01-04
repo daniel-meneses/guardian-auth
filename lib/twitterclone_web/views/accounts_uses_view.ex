@@ -1,7 +1,8 @@
-defmodule TwittercloneWeb.AccountsUserView do
+defmodule TwittercloneWeb.Accounts.UserView do
   use TwittercloneWeb, :view
-  alias TwittercloneWeb.UserView
-  alias TwittercloneWeb.PostView
+
+  alias TwittercloneWeb.Accounts.UserView
+  alias TwittercloneWeb.UserDevice.PostView
 
   def render("index.json", %{users: users}) do
     %{data: render_many(users, UserView, "user.json")}

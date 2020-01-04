@@ -1,4 +1,4 @@
-defmodule TwittercloneWeb.AccountsUserController do
+defmodule TwittercloneWeb.Accounts.UserController do
   use TwittercloneWeb, :controller
 
   alias Twitterclone.Accounts

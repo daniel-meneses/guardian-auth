@@ -1,16 +1,9 @@
-defmodule TwittercloneWeb.SubscriptionView do
+defmodule TwittercloneWeb.UserDevice.SubscriptionView do
   use TwittercloneWeb, :view
 
-  alias TwittercloneWeb.{SubscriptionView, UserView, TypeConverter}
-
-  def render("index.json", %{subs: subs}) do
-    %{ data: render_many(subs, SubscriptionView, "show.json", as: :sub)
-     }
-  end
-
-  def render("created.json", %{sub: sub}) do
-    %{ data: render_one(sub, SubscriptionView, "show.json", as: :sub) }
-  end
+  alias TwittercloneWeb.TypeConverter
+  alias TwittercloneWeb.Accounts.UserView
+  alias TwittercloneWeb.UserDevice.SubscriptionView
 
   def render("show.json", %{sub: sub}) do
     %{ Integer.to_string(sub.subject.id) => %{
@@ -31,6 +24,10 @@ defmodule TwittercloneWeb.SubscriptionView do
 
   def render("subscription_id.json", %{subscription: subscription}) do
     (subscription.subject.id)
+  end
+
+  def render("deleted.json", %{}) do
+    %{deleted: "true"}
   end
 
 end

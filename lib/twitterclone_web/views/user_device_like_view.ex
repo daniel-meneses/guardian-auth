@@ -1,4 +1,4 @@
-defmodule TwittercloneWeb.UserDeviceLikeView do
+defmodule TwittercloneWeb.UserDevice.LikeView do
   use TwittercloneWeb, :view
 
   def render("array_of_liked_post_ids.json", %{ids: ids}) do

@@ -1,10 +1,6 @@
 defmodule TwittercloneWeb.FeedController do
   use TwittercloneWeb, :controller
 
-  alias Twitterclone.Accounts
-  alias Twitterclone.Accounts.User
-  alias Twitterclone.Repo
-
   action_fallback TwittercloneWeb.FallbackController
 
   def index(conn, %{"id" => id} = params) do

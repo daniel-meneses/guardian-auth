@@ -1,13 +1,12 @@
-defmodule TwittercloneWeb.PostController do
+defmodule TwittercloneWeb.UserDevice.PostController do
   use TwittercloneWeb, :controller
 
-  import Ecto.Query
-  alias Twitterclone.{Repo, Guardian.Plug, User}
+  alias Twitterclone.{Repo, UserDevice}
 
   action_fallback TwittercloneWeb.FallbackController
 
   def create(conn, params) do
-    with {:ok, post} <- Twitterclone.UserDevice.create_post(conn, params) do
+    with {:ok, post} <- UserDevice.create_post(conn, params) do
       post = post |> Repo.preload([:user, :likes])
       render(conn, "show.json", post: post)
     end

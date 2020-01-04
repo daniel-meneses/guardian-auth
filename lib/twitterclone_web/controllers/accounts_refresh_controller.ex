@@ -1,4 +1,4 @@
-defmodule TwittercloneWeb.AccountsRefreshController do
+defmodule TwittercloneWeb.Accounts.RefreshController do
   use TwittercloneWeb, :controller
 
   alias Twitterclone.Accounts

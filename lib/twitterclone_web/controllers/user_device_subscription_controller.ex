@@ -1,7 +1,7 @@
-defmodule TwittercloneWeb.SubscriptionController do
+defmodule TwittercloneWeb.UserDevice.SubscriptionController do
   use TwittercloneWeb, :controller
 
-  alias Twitterclone.{Guardian.Plug, Repo, UserDevice}
+  alias Twitterclone.{Repo, UserDevice}
 
   action_fallback TwittercloneWeb.FallbackController
 
@@ -13,13 +13,13 @@ defmodule TwittercloneWeb.SubscriptionController do
 
   def create(conn, params) do
     with {:ok, sub} <- UserDevice.create_subscription(conn, params) do
-      conn |> put_status(:created) |> render("created.json", %{sub: sub |> Repo.preload(:subject)})
+      conn |> put_status(:created) |> render("show.json", %{sub: sub |> Repo.preload(:subject)})
     end
   end
 
   def delete(conn, params) do
     with {:ok, _} <- UserDevice.delete_subscription(conn, params) do
-      render(conn, "created.json")
+      render(conn, "deleted.json")
     end
   end
 

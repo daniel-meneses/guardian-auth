@@ -1,8 +1,7 @@
-defmodule TwittercloneWeb.UserDeviceLikeController do
+defmodule TwittercloneWeb.UserDevice.LikeController do
   use TwittercloneWeb, :controller
 
   alias Twitterclone.UserDevice
-  alias Twitterclone.Guardian.Plug
 
   action_fallback TwittercloneWeb.FallbackController
 
