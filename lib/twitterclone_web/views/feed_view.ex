@@ -10,7 +10,7 @@ defmodule TwittercloneWeb.FeedView do
   end
 
   def render("data_map.json", %{feed: feed, kerosene: kerosene, conn: conn}) do
-    maps = render_many(feed, PostView, "show2.json", as: :post)
+    maps = render_many(feed, PostView, "show.json", as: :post)
     %{ list: render_many(feed, PostView, "post_id.json", as: :post),
        data_map: TypeConverter.maplist_to_map(maps),
        pagination: paginate(conn, kerosene)

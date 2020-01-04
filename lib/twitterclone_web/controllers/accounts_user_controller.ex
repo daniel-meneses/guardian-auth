@@ -7,7 +7,7 @@ defmodule TwittercloneWeb.Accounts.UserController do
 
   def create(conn, %{"user" => user_params}) do
     with {:ok, user, token_refresh, token_access } <- Accounts.create_user(user_params) do
-      render(conn, "jwt.json", token_refresh: token_refresh, token_access: token_access, user: user)
+      render(conn, "created.json", token_refresh: token_refresh, token_access: token_access, user: user)
     end
   end
 

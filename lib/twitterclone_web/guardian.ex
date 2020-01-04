@@ -4,7 +4,6 @@ defmodule Twitterclone.Guardian do
   alias Twitterclone.Accounts
 
   def subject_for_token(user, _claims) do
-    IO.inspect user
     sub = to_string(user.id)
     {:ok, sub}
   end

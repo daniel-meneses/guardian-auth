@@ -5,6 +5,8 @@ defmodule TwittercloneWeb.FallbackController do
   See `Phoenix.Controller.action_fallback/1` for more details.
   """
   use TwittercloneWeb, :controller
+  alias TwittercloneWeb.ChangesetView
+  alias TwittercloneWeb.ErrorView
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
@@ -23,7 +25,7 @@ defmodule TwittercloneWeb.FallbackController do
   def call(conn, {:error, :unauthorized}) do
     conn
     |> put_status(:unauthorized)
-    |> json(%{error: "Login error"})
+    |> json(%{error: "Unauthorized"})
   end
 
   def call(conn, {:error}) do
