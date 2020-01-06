@@ -4,8 +4,13 @@ defmodule Twitterclone.Guardian do
   alias Twitterclone.Accounts
 
   def subject_for_token(user, _claims) do
-    sub = to_string(user.id)
-    {:ok, sub}
+    if is_map(user) do
+      sub = to_string(user.id)
+      {:ok, sub}
+    else
+      sub = user
+      {:ok, sub}
+    end
   end
 
   def subject_for_token(_, _) do
@@ -14,8 +19,7 @@ defmodule Twitterclone.Guardian do
 
   def resource_from_claims(claims) do
     id = claims["sub"]
-    resource = Accounts.get_user!(id)
-    {:ok,  resource}
+    {:ok,  id}
   end
 
   def resource_from_claims(_claims) do

@@ -24,6 +24,10 @@ defmodule TwittercloneWeb do
       import Plug.Conn
       import TwittercloneWeb.Gettext
       alias TwittercloneWeb.Router.Helpers, as: Routes
+      alias Twitterclone.Repo
+      alias Twitterclone.{Accounts, Subscriptions, UserDevice}
+      alias Twitterclone.RequireParams
+      action_fallback TwittercloneWeb.FallbackController
     end
   end
 

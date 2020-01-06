@@ -34,10 +34,17 @@ defmodule TwittercloneWeb.FallbackController do
     |> json(%{error: "Not found"})
   end
 
+  def call(conn, {:param_error, error}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> json(%{error: error})
+  end
+
   def call(conn, :error) do
     conn
     |> put_status(:not_found)
     |> json(%{error: "Not found"})
   end
+
 
 end
