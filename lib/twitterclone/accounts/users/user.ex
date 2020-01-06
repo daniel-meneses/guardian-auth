@@ -20,7 +20,6 @@ defmodule Twitterclone.Accounts.Users.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    # casting for external data validations
     |> cast(attrs, [:first_name, :last_name, :email, :password, :password_confirmation])
     |> validate_required([:first_name, :last_name, :email, :password, :password_confirmation])
     |> validate_format(:email, ~r/@/)
