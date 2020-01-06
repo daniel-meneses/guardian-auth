@@ -4,7 +4,8 @@ defmodule Twitterclone.Accounts do
   Serves as public API for managing users, user authentication, and user preferences.
   """
   alias Twitterclone.{Repo, Guardian, Guardian.Plug}
-  alias Twitterclone.Accounts.{User, UserAuthentication, UserSession}
+  alias Twitterclone.Accounts.{UserAuthentication, UserSession}
+  alias Twitterclone.Accounts.Users.User
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 

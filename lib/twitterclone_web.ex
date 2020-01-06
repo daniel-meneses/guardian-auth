@@ -26,6 +26,7 @@ defmodule TwittercloneWeb do
       alias TwittercloneWeb.Router.Helpers, as: Routes
       alias Twitterclone.Repo
       alias Twitterclone.{Accounts, Subscriptions, UserDevice}
+      alias Twitterclone.Accounts.Users.User
       alias Twitterclone.RequireParams
       action_fallback TwittercloneWeb.FallbackController
     end

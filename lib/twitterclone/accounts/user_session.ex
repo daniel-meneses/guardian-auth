@@ -3,7 +3,7 @@ defmodule Twitterclone.Accounts.UserSession do
   The Session context
   """
   alias Twitterclone.Repo
-  alias Twitterclone.Accounts.User
+  alias Twitterclone.Accounts.Users.User
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 

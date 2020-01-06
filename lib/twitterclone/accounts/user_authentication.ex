@@ -4,7 +4,7 @@ defmodule Twitterclone.Accounts.UserAuthentication do
   Private api for creating, deleting, and updating users
   """
   alias Twitterclone.Repo
-  alias Twitterclone.Accounts.User
+  alias Twitterclone.Accounts.Users.User
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 

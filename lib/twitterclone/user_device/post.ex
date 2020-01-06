@@ -3,7 +3,7 @@ defmodule Twitterclone.UserDevice.Post do
   import Ecto.Changeset
 
   alias Twitterclone.UserDevice.{Post, Like}
-  alias Twitterclone.Accounts.User
+  alias Twitterclone.Accounts.Users.User
 
   schema "posts" do
     field :message, :string

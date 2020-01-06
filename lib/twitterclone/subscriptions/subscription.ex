@@ -2,8 +2,8 @@ defmodule Twitterclone.Subscriptions.Subscription do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Twitterclone.Accounts.User
   alias Twitterclone.Subscriptions.Subscription
+  alias Twitterclone.Accounts.Users.User
 
   schema "subscriptions" do
     field :accepted, :boolean, default: false

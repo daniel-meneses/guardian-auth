@@ -2,8 +2,8 @@ defmodule Twitterclone.UserDevice.Like do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Twitterclone.Accounts.User
   alias Twitterclone.UserDevice.Post
+  alias Twitterclone.Accounts.Users.User
 
   schema "likes" do
     belongs_to :user, User
