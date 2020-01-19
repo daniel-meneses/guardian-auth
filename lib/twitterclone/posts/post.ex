@@ -2,7 +2,7 @@ defmodule Twitterclone.Posts.Post do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Twitterclone.UserDevice.{Like}
+  alias Twitterclone.Likes.Like
   alias Twitterclone.Posts.Post
   alias Twitterclone.Accounts.Users.User
 

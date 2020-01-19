@@ -28,8 +28,8 @@ defmodule TwittercloneWeb.Router do
 
   scope "/api/v1", TwittercloneWeb do
     pipe_through [:api, :authenticate_access]
-    get "/global_feed", FeedController, :index
-    get "/feed/:id", FeedController, :index
+    get "/feed/global", FeedController, :index
+    get "/feed/user/:id", FeedController, :index
   end
 
   scope "/api/v1/user_device", TwittercloneWeb.UserDevice do
