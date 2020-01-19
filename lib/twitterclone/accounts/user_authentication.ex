@@ -5,6 +5,8 @@ defmodule Twitterclone.Accounts.UserAuthentication do
   """
   alias Twitterclone.Repo
   alias Twitterclone.Accounts.Users.User
+  alias Twitterclone.Accounts.Credentials.Credential
+  alias Twitterclone.UserDevice.Subscription
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
@@ -12,6 +14,7 @@ defmodule Twitterclone.Accounts.UserAuthentication do
   def user_changeset(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     |> Repo.insert()
   end
 

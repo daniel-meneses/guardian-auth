@@ -9,7 +9,6 @@ defmodule TwittercloneWeb.UserDevice.PostView do
         post: post.message,
         first_name: post.user.first_name,
         last_name: post.user.last_name,
-        emal: post.user.email,
         user_id: post.user.id,
         created: post.inserted_at,
         likes: length(post.likes)

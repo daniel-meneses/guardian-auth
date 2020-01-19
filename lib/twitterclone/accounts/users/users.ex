@@ -4,9 +4,7 @@ defmodule Twitterclone.Accounts.Users do
   On success, return user struct with access, refresh tokens.
   On fail, return changeset error.
   """
-  def create_user(params) do
-    with {:ok, user} <- UserAuthentication.user_changeset(params) do
-      Twitterclone.Accounts.encode_tokens(user)
-    end
+  def create_user() do
+
   end
 end

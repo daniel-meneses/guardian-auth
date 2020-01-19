@@ -3,9 +3,15 @@ defmodule Twitterclone.Accounts do
   The Accounts context.
   Serves as public API for managing users, user authentication, and user preferences.
   """
+  import Ecto.Changeset
+  import Ecto
   alias Twitterclone.{Repo, Guardian, Guardian.Plug}
   alias Twitterclone.Accounts.{UserAuthentication, UserSession}
   alias Twitterclone.Accounts.Users.User
+  alias Twitterclone.Accounts.Users
+  alias Twitterclone.Accounts.Credentials
+  alias Twitterclone.Accounts.Credentials.Credential
+  alias Twitterclone.Accounts.UserAuthentication
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
@@ -23,10 +29,26 @@ defmodule Twitterclone.Accounts do
   On success, return user struct with access, refresh tokens.
   On fail, return changeset error.
   """
-  def create_user(params) do
-    with {:ok, user} <- UserAuthentication.user_changeset(params) do
+  def create_user2(params) do
+    with {:ok, user} <- Twitterclone.Accounts.UserAuthentication.user_changeset(params) do
       encode_tokens(user)
     end
+  end
+
+  def create_user(params) do
+    with {:ok, user} <- Twitterclone.Accounts.create_user4(params) do
+      user = encode_tokens(user)
+      IO.inspect user
+      user
+    end
+  end
+
+  def create_user4(params) do
+    params = %{"first_name" => "awdd", "last_name" => "awdawd", "credential" => %{"email" => "da2wddd@awdcd.owd", "password" => "123123123", "password_confirmation" => "123123123"}}
+    %User{}
+    |> User.changeset(params)
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Twitterclone.Accounts.Credentials.Credential.changeset/2)
+    |> Repo.insert()
   end
 
   @doc """

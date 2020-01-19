@@ -46,5 +46,11 @@ defmodule TwittercloneWeb.FallbackController do
     |> json(%{error: "Not found"})
   end
 
+  def call(conn, hey) do
+    conn
+    |> put_status(:not_found)
+    |> json(%{error: "Not found"})
+  end
+
 
 end

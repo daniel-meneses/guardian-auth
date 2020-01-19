@@ -1,5 +1,7 @@
 defmodule Twitterclone.Posts do
 
+  alias Twitterclone.Repo
+
   alias Twitterclone.Posts.Post
 
   defp get_user_id(conn) do
