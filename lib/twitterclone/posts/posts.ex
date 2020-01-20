@@ -4,6 +4,7 @@ defmodule Twitterclone.Posts do
   import Ecto.Query, warn: true
 
   alias Twitterclone.Posts.Post
+  alias Twitterclone.Guardian.Plug
 
   defp get_user_id(conn) do
     Plug.current_resource(conn)

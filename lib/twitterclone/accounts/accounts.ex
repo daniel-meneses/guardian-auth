@@ -4,13 +4,9 @@ defmodule Twitterclone.Accounts do
   Serves as public API for managing users, user authentication, and user preferences.
   """
   alias Twitterclone.{Repo, Guardian, Guardian.Plug}
-  alias Twitterclone.Accounts.{UserSession}
   alias Twitterclone.Accounts.Users
   alias Twitterclone.Accounts.Users.User
-  alias Twitterclone.Accounts.UserAuthentication
   alias Twitterclone.Accounts.Credentials
-
-  import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   @doc """
   Gets a single user.
@@ -41,7 +37,7 @@ defmodule Twitterclone.Accounts do
   def create_session(%{"email" => email, "password" => password}) do
     case Credentials.check_password(email, password) do
       {cred, true} -> Credentials.preload_user(cred).user |> encode_tokens
-      {_, false} -> {:error, :unprocessable_entity}
+              _ -> {:error, :unprocessable_entity}
     end
   end
   @doc """
@@ -50,7 +46,7 @@ defmodule Twitterclone.Accounts do
   """
   def refresh_token(conn) do
     with user <- Plug.current_resource(conn) do
-      {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
+      Guardian.encode_and_sign(user, %{}, token_type: "access")
     end
   end
 

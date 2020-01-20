@@ -13,10 +13,4 @@ defmodule TwittercloneWeb.UserDevice.SubscriptionController do
     end
   end
 
-  def delete(conn, params) do
-    with {:ok, _} <- UserDevice.delete_subscription(conn, params) do
-      render(conn, "deleted.json")
-    end
-  end
-
 end

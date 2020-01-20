@@ -21,7 +21,8 @@ defmodule Twitterclone.Accounts.Credentials do
   end
 
   def preload_user(credentials) do
-    credentials |> Repo.preload(:user)
+    credentials
+    |> Repo.preload(:user)
   end
 
 end
