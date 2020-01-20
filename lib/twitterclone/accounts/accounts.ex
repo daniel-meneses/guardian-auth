@@ -8,6 +8,7 @@ defmodule Twitterclone.Accounts do
   alias Twitterclone.Accounts.Users
   alias Twitterclone.Accounts.Users.User
   alias Twitterclone.Accounts.UserAuthentication
+  alias Twitterclone.Accounts.Credentials
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
@@ -37,9 +38,10 @@ defmodule Twitterclone.Accounts do
   On success, return user struct with access, refresh tokens.
   On fail, return error.
   """
-  def create_session(params) do
-    with {:ok, user} <- UserSession.sign_in(params) do
-      encode_tokens(user)
+  def create_session(%{"email" => email, "password" => password}) do
+    case Credentials.check_password(email, password) do
+      {cred, true} -> Credentials.preload_user(cred).user |> encode_tokens
+      {_, false} -> {:error, :unprocessable_entity}
     end
   end
   @doc """

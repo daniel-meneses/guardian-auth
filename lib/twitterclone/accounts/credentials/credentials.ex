@@ -1,13 +1,27 @@
 defmodule Twitterclone.Accounts.Credentials do
 
+  alias Twitterclone.Repo
   alias Twitterclone.Accounts.Credentials.Credential
+  alias Comeonin.Bcrypt
 
-  def cast_assoc_credentials(user) do
-    user |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
-  end
+  import Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   def update_credentials() do
+  end
 
+  def check_password(email, password) do
+    case get_by_email(email) do
+      nil -> Bcrypt.dummy_checkpw()
+      credentials -> { credentials, Bcrypt.checkpw(password, credentials.password_hash)}
+    end
+  end
+
+  def get_by_email(email) do
+    Repo.get_by(Credential, email: String.downcase(email))
+  end
+
+  def preload_user(credentials) do
+    credentials |> Repo.preload(:user)
   end
 
 end

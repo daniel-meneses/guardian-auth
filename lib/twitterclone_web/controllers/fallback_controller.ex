@@ -28,6 +28,12 @@ defmodule TwittercloneWeb.FallbackController do
     |> json(%{error: "Unauthorized"})
   end
 
+  def call(conn, {:error, :unprocessable_entity}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> json(%{error: "unprocessable"})
+  end
+
   def call(conn, {:error}) do
     conn
     |> put_status(:not_found)
@@ -46,7 +52,7 @@ defmodule TwittercloneWeb.FallbackController do
     |> json(%{error: "Not found"})
   end
 
-  def call(conn, hey) do
+  def call(conn, _) do
     conn
     |> put_status(:not_found)
     |> json(%{error: "Not found"})

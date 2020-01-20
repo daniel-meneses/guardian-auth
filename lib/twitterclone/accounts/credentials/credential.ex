@@ -30,8 +30,7 @@ defmodule Twitterclone.Accounts.Credentials.Credential do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}}
         -> put_change(changeset, :password_hash, hashpwsalt(password))
-      _ ->
-          changeset
+      _ -> changeset
     end
   end
 
