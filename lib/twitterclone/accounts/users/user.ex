@@ -10,7 +10,7 @@ defmodule Twitterclone.Accounts.Users.User do
     field :first_name, :string
     field :last_name, :string
     has_many :user_subscriptions, Twitterclone.Subscriptions.Subscription, foreign_key: :user_id, references: :id
-    has_many :posts, Twitterclone.UserDevice.Post, foreign_key: :user_id, references: :id
+    has_many :posts, Twitterclone.Posts.Post, foreign_key: :user_id, references: :id
     has_one :credential, Credential
     timestamps()
   end

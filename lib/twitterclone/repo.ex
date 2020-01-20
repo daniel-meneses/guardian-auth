@@ -2,5 +2,5 @@ defmodule Twitterclone.Repo do
   use Ecto.Repo,
     otp_app: :twitterclone,
     adapter: Ecto.Adapters.Postgres
-  use Kerosene, per_page: 4
+  use Kerosene, per_page: 20
 end

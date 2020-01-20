@@ -7,9 +7,9 @@ defmodule Twitterclone.Feed do
   import Ecto.Query, warn: false
   alias Twitterclone.Repo
   alias Twitterclone.Posts.Post
-  alias Twitterclone.Guardian
   alias Twitterclone.Guardian.Plug
   alias Twitterclone.Accounts.Users.User
+  alias Twitterclone.Posts
 
   @doc """
   Get user from connection
@@ -29,21 +29,18 @@ defmodule Twitterclone.Feed do
 
   def get_global_feed() do
     {products, kerosene} =
-    Post
-    |> preload(:user)
-    |> preload(:likes)
-    |> reverse_order
-    |> Repo.paginate()
+      Posts.get_all_post()
+      |> Posts.reverse_and_paginate
+  end
+
+  def get_all_users_from_feed(feed) do
+    
   end
 
   def get_user_feed(%{"id" => id}) do
     {products, kerosene} =
-      Post
-      |> where([p], p.user_id == ^id)
-      |> preload(:likes)
-      |> preload(:user)
-      |> reverse_order
-      |> Repo.paginate()
+      Posts.get_all_post_by_user_id(id)
+      |> Posts.reverse_and_paginate
   end
 
 

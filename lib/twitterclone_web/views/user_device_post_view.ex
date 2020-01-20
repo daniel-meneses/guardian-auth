@@ -7,8 +7,6 @@ defmodule TwittercloneWeb.UserDevice.PostView do
     %{ Integer.to_string(post.id) => %{
         id: post.id,
         post: post.message,
-        first_name: post.user.first_name,
-        last_name: post.user.last_name,
         user_id: post.user.id,
         created: post.inserted_at,
         likes: length(post.likes)

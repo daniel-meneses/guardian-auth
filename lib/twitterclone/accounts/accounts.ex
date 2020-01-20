@@ -38,8 +38,6 @@ defmodule Twitterclone.Accounts do
   def create_user(params) do
     with {:ok, user} <- Twitterclone.Accounts.create_user4(params) do
       user = encode_tokens(user)
-      IO.inspect user
-      user
     end
   end
 
