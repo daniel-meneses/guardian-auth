@@ -1,8 +1,6 @@
 defmodule Twitterclone.Guardian do
   use Guardian, otp_app: :twitterclone
 
-  alias Twitterclone.Accounts
-
   def subject_for_token(user, _claims) do
     if is_map(user) do
       sub = to_string(user.id)

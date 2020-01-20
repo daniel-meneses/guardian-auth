@@ -1,10 +1,22 @@
 defmodule Twitterclone.Accounts.Users do
-  @doc """
-  Create a user.
-  On success, return user struct with access, refresh tokens.
-  On fail, return changeset error.
-  """
-  def create_user() do
+
+  alias Twitterclone.Repo
+  alias Twitterclone.Accounts.Users.User
+  alias Twitterclone.Accounts.Credentials.Credential
+
+  def create_user(attrs) do
+    %User{}
+    |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
+    |> Repo.insert()
+  end
+
+  def update_user() do
 
   end
+
+  def delete_user() do
+
+  end
+
 end

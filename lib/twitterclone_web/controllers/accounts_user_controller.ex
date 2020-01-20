@@ -3,7 +3,6 @@ defmodule TwittercloneWeb.Accounts.UserController do
   alias Twitterclone.Repo
 
   def create(conn, %{"user" => user_params}) do
-    IO.puts "accounts.create"
     with {:ok, user, token_refresh, token_access } <- Accounts.create_user(user_params) do
       render(conn, "created.json", token_refresh: token_refresh, token_access: token_access, user: user)
     end

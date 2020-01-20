@@ -1,7 +1,7 @@
 defmodule Twitterclone.Likes do
 
   import Ecto.Query, warn: false
-  alias Twitterclone.{Repo, Likes}
+  alias Twitterclone.{Repo}
   alias Twitterclone.Likes.Like
   alias Twitterclone.Guardian.Plug
 
