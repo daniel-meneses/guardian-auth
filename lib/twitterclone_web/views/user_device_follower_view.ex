@@ -31,7 +31,7 @@ defmodule TwittercloneWeb.UserDevice.FollowerView do
   def render("followers_map.json", %{follows: follows, users: users}) do
     users = render_many(users, UserView, "data_map_user.json", as: :user)
     follow = render_many(follows, FollowerView, "follow.json", as: :follow)
-    %{ follows: Convert.maplist_to_map(follow),
+    %{ followers: Convert.maplist_to_map(follow),
        users: Convert.maplist_to_map(users)
      }
   end
