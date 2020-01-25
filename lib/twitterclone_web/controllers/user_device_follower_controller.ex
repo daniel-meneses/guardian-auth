@@ -2,8 +2,10 @@ defmodule TwittercloneWeb.UserDevice.FollowerController do
   use TwittercloneWeb, :controller
 
   def index(conn, params) do
-    with followers <- Twitterclone.get_followers_by_accepted(conn, params) do
-      render(conn, "data_map.json", followers: followers)
+    with follows <- Twitterclone.get_followers_by_accepted(conn, params) do
+      users = Enum.reduce(follows, [], fn follow, list -> [follow.user | list] end)
+      users = Enum.uniq(users)
+      render(conn, "followers_map.json", follows: follows, users: users)
     end
   end
 
