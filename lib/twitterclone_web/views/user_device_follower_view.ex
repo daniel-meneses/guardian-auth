@@ -22,6 +22,7 @@ defmodule TwittercloneWeb.UserDevice.FollowerView do
 
   def render("follow.json", %{follow: follow}) do
     %{ Integer.to_string(follow.id) => %{
+       id: Integer.to_string(follow.id),
        user_id: follow.user.id,
        inserted_at: follow.inserted_at
        }
