@@ -9,28 +9,3 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-
-alias Twitterclone.Repo
-alias Twitterclone.Accounts.User
-alias Twitterclone.User.Subscription
-
-
-Repo.insert! %User{
-  first_name: "Daniel",
-  last_name: "Meneses",
-  email: "daniel@gmail.com",
-  password_hash: "abc"
-}
-
-Repo.insert! %User{
-  first_name: "Melanie",
-  last_name: "Supan",
-  email: "mel@gmail.com",
-  password_hash: "abc"
-}
-
-Repo.insert! %User{
-  first_name: "Dang",
-  last_name: "Man",
-  email: "dang@gmail.com"
-}
