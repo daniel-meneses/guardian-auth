@@ -7,6 +7,7 @@ defmodule Twitterclone.Accounts do
   alias Twitterclone.Accounts.Users
   alias Twitterclone.Accounts.Users.User
   alias Twitterclone.Accounts.Credentials
+  alias Twitterclone.Accounts.Avatars
 
   @doc """
   Gets a single user.
@@ -47,6 +48,18 @@ defmodule Twitterclone.Accounts do
   def refresh_token(conn) do
     with user <- Plug.current_resource(conn) do
       Guardian.encode_and_sign(user, %{}, token_type: "access")
+    end
+  end
+
+  def return_presigned_url(conn) do
+    with {:ok, url} <- Avatars.return_presigned_url(conn) do
+      url
+    end
+  end
+
+  def upload_avatar(conn) do
+    with {:ok, url} <- Avatars.return_presigned_url(conn) do
+      url
     end
   end
 

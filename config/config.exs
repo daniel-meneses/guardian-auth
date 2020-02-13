@@ -34,6 +34,14 @@ config :twitterclone, Twitterclone.Guardian,
          "access" => {1, :weeks},
        }
 
+config :ex_aws,
+  json_codec: Jason,
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"},
+  region: "ap-southeast-2",
+  bucket: 'images-03'
+
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

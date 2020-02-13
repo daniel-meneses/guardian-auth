@@ -12,12 +12,4 @@ defmodule Twitterclone.Accounts.Users do
     |> Repo.insert()
   end
 
-  def update_user() do
-
-  end
-
-  def delete_user() do
-
-  end
-
 end

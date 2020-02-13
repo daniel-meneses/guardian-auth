@@ -47,7 +47,11 @@ defmodule Twitterclone.MixProject do
       {:guardian, "~> 2.0"},
       {:cors_plug, "~> 2.0"},
       {:kerosene, "~> 0.9.0"},
-      {:etag_plug, "~> 0.2.0"}
+      {:etag_plug, "~> 0.2.0"},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:hackney, "~> 1.15"},
+      {:sweet_xml, "~> 0.6"} 
     ]
   end
 
