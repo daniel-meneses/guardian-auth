@@ -9,10 +9,10 @@ defmodule Twitterclone.Accounts.Avatars do
     Plug.current_resource(conn)
   end
 
-  def return_presigned_url(conn) do
+  def return_presigned_url(uuid) do
     ExAws.Config.new(:s3)
     |> ExAws.S3.presigned_url(:put, "images-03",
-                "avatar.png", [expires_in: 300, query_params: [{"ContentType", "image/jpeg"}]]) # 300 seconds
+                uuid, [expires_in: 300, query_params: [{"ContentType", "image/jpeg"}]]) # 300 seconds
   end
 
   def create_avatar(conn, url) do

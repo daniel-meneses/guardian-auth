@@ -14,8 +14,9 @@ defmodule Twitterclone.Accounts.Avatars.Avatar do
   @doc false
   def changeset(%Avatar{} = avatar, attrs) do
     avatar
-    |> cast(attrs, [:image])
+    |> cast(attrs, [:user_id, :image])
     |> validate_required([:image])
+    |> unique_constraint(:image)
   end
 
 end

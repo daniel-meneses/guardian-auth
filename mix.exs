@@ -51,7 +51,8 @@ defmodule Twitterclone.MixProject do
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:hackney, "~> 1.15"},
-      {:sweet_xml, "~> 0.6"} 
+      {:sweet_xml, "~> 0.6"},
+      {:uuid, "~> 1.1.8" }
     ]
   end
 

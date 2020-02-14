@@ -52,13 +52,14 @@ defmodule Twitterclone.Accounts do
   end
 
   def return_presigned_url(conn) do
-    with {:ok, url} <- Avatars.return_presigned_url(conn) do
-      url
+    uuid = UUID.uuid4()
+    with {:ok, url} <- Avatars.return_presigned_url(uuid) do
+      {uuid, url}
     end
   end
 
-  def upload_avatar(conn) do
-    with {:ok, url} <- Avatars.return_presigned_url(conn) do
+  def save_avatar_url(conn, imageURL) do
+    with {:ok, url} <- Avatars.create_avatar(conn, imageURL) do
       url
     end
   end
