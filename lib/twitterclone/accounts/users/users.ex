@@ -12,4 +12,14 @@ defmodule Twitterclone.Accounts.Users do
     |> Repo.insert()
   end
 
+  def get_user_by_id(id) do
+    Repo.get(User, id)
+    |> Repo.preload([:avatar])
+  end
+
+  def preload_user_posts(user) do
+    user
+    |> Repo.preload([:posts, posts: :user, posts: :likes])
+  end
+
 end

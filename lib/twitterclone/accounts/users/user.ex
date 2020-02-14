@@ -13,6 +13,7 @@ defmodule Twitterclone.Accounts.Users.User do
     field :last_name, :string
     field :bio, :string
     field :alias, :string
+    field :device_id, :string
     has_many :user_subscriptions, Subscription, foreign_key: :user_id, references: :id
     has_many :posts, Post, foreign_key: :user_id, references: :id
     has_one :credential, Credential

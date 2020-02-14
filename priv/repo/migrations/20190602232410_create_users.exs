@@ -7,6 +7,7 @@ defmodule Twitterclone.Repo.Migrations.CreateUsers do
       add :last_name, :string
       add :bio, :string
       add :alias, :string
+      add :device_id, :string
       timestamps()
     end
   end

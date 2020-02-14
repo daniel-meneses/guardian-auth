@@ -14,8 +14,8 @@ defmodule Twitterclone.Accounts do
   Raises `Ecto.NoResultsError` if the User does not exist.
   """
   def get_user!(id) do
-    Repo.get!(User, id)
-    |> Repo.preload([:avatar, :posts, posts: :user, posts: :likes])
+    Users.get_user_by_id(id)
+    |> Users.preload_user_posts()
   end
 
   @doc """
@@ -47,6 +47,7 @@ defmodule Twitterclone.Accounts do
   """
   def refresh_token(conn) do
     with user <- Plug.current_resource(conn) do
+      IO.inspect user
       Guardian.encode_and_sign(user, %{}, token_type: "access")
     end
   end
@@ -56,7 +57,8 @@ defmodule Twitterclone.Accounts do
   end
 
   def save_avatar_url(conn, imageURL) do
-    Avatars.create_avatar(conn, imageURL)
+    user_id = Plug.current_resource(conn)
+    Avatars.create_avatar(user_id, imageURL)
   end
 
   @doc false

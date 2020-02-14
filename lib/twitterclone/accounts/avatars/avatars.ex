@@ -5,10 +5,6 @@ defmodule Twitterclone.Accounts.Avatars do
   alias Twitterclone.Accounts.Avatars.Avatar
   alias Twitterclone.Guardian.Plug
 
-  defp get_user_id(conn) do
-    Plug.current_resource(conn)
-  end
-
   def return_presigned_url() do
     uuid = UUID.uuid4()
     ExAws.Config.new(:s3)
@@ -16,8 +12,8 @@ defmodule Twitterclone.Accounts.Avatars do
                 uuid, [expires_in: 300, query_params: [{"ContentType", "image/jpeg"}]]) # 300 seconds
   end
 
-  def create_avatar(conn, imageURL) do
-    attrs = %{user_id: get_user_id(conn), image: imageURL}
+  def create_avatar(user_id, imageURL) do
+    attrs = %{user_id: user_id, image: imageURL}
     Avatar.changeset(%Avatar{}, attrs)
     |> Repo.insert()
   end
