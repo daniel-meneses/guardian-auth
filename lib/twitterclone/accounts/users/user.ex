@@ -3,6 +3,7 @@ defmodule Twitterclone.Accounts.Users.User do
   import Ecto.Changeset
 
   alias Twitterclone.Accounts.Users.User
+  alias Twitterclone.Accounts.Avatars.Avatar
   alias Twitterclone.Subscriptions.Subscription
   alias Twitterclone.Posts.Post
   alias Twitterclone.Accounts.Credentials.Credential
@@ -11,11 +12,11 @@ defmodule Twitterclone.Accounts.Users.User do
     field :first_name, :string
     field :last_name, :string
     field :bio, :string
-    field :image, :string
     field :alias, :string
     has_many :user_subscriptions, Subscription, foreign_key: :user_id, references: :id
     has_many :posts, Post, foreign_key: :user_id, references: :id
     has_one :credential, Credential
+    has_one :avatar, Avatar
     timestamps()
   end
 

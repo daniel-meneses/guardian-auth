@@ -15,7 +15,7 @@ defmodule Twitterclone.Accounts do
   """
   def get_user!(id) do
     Repo.get!(User, id)
-    |> Repo.preload([:posts, posts: :user, posts: :likes])
+    |> Repo.preload([:avatar, :posts, posts: :user, posts: :likes])
   end
 
   @doc """
@@ -51,17 +51,12 @@ defmodule Twitterclone.Accounts do
     end
   end
 
-  def return_presigned_url(conn) do
-    uuid = UUID.uuid4()
-    with {:ok, url} <- Avatars.return_presigned_url(uuid) do
-      {uuid, url}
-    end
+  def return_presigned_url() do
+    Avatars.return_presigned_url()
   end
 
   def save_avatar_url(conn, imageURL) do
-    with {:ok, url} <- Avatars.create_avatar(conn, imageURL) do
-      url
-    end
+    Avatars.create_avatar(conn, imageURL)
   end
 
   @doc false

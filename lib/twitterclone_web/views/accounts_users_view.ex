@@ -24,6 +24,14 @@ defmodule TwittercloneWeb.Accounts.UserView do
       last_name: user.last_name}
   end
 
+  def render("public_user2.json", %{user: user}) do
+    %{id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      avatar: user.avatar.image
+      }
+  end
+
   def render("data_map_user.json", %{user: user}) do
     %{
       Integer.to_string(user.id) => %{
