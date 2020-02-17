@@ -11,7 +11,7 @@ defmodule TwittercloneWeb.UserDevice.FollowerController do
 
   def create(conn, params) do
       with {:ok, follower} <- Twitterclone.accept_or_deny_follow_request(conn, params["id"], params["accepted"]) do
-          render(conn, "show.json", follow: follower)
+          render(conn, "follower.json", follow: follower)
       end
   end
 

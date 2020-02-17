@@ -1,8 +1,6 @@
 defmodule TwittercloneWeb.UserDevice.LikeController do
   use TwittercloneWeb, :controller
 
-  alias Twitterclone.UserDevice
-
   def index(conn, _params) do
     with likes <- UserDevice.get_all_likes(conn) do
       with post_ids <- UserDevice.return_liked_post_ids(likes) do

@@ -7,8 +7,8 @@ defmodule TwittercloneWeb.Accounts.AvatarView do
     %{ url: url}
   end
 
-  def render("success.json", %{user: user}) do
-    %{ user: render_one(user, UserView, "public_user2.json", as: :user) }
+  def render("user", %{user: user}) do
+    render_one(user, UserView, "data_map_user.json")
   end
 
 end

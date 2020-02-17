@@ -4,6 +4,7 @@ defmodule Twitterclone.Accounts.Credentials.Credential do
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
   alias Twitterclone.Accounts.Users.User
+  alias Comeonin.Bcrypt
 
   schema "credentials" do
     field :email, :string
@@ -17,7 +18,7 @@ defmodule Twitterclone.Accounts.Credentials.Credential do
   @doc false
   def changeset(credential, attrs) do
     credential
-    |> cast(attrs, [:email, :password, :password_confirmation, :user_id])
+    |> cast(attrs, [:email, :password, :password_confirmation])
     |> validate_required([:email, :password, :password_confirmation])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)
@@ -29,7 +30,7 @@ defmodule Twitterclone.Accounts.Credentials.Credential do
   defp put_password_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}}
-        -> put_change(changeset, :password_hash, hashpwsalt(password))
+        -> put_change(changeset, :password_hash, Bcrypt.hashpwsalt(password))
       _ -> changeset
     end
   end

@@ -6,9 +6,6 @@ defmodule Twitterclone.Accounts.Credentials do
 
   import Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
-  def update_credentials() do
-  end
-
   def check_password(email, password) do
     case get_by_email(email) do
       nil -> Bcrypt.dummy_checkpw()

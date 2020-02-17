@@ -1,6 +1,5 @@
 defmodule TwittercloneWeb.Accounts.UserController do
   use TwittercloneWeb, :controller
-  alias Twitterclone.Repo
 
   def create(conn, %{"user" => user_params}) do
     with {:ok, user, token_refresh, token_access } <- Accounts.create_user(user_params) do
@@ -8,15 +7,15 @@ defmodule TwittercloneWeb.Accounts.UserController do
     end
   end
 
-  def update(conn, %{"user" => user_params}) do
-    with {:ok, user, token_refresh, token_access } <- Accounts.create_user(user_params) do
-      render(conn, "created.json", token_refresh: token_refresh, token_access: token_access, user: user)
+  def update(conn, %{"avatar" => avatar}) do
+    with {:ok, user } <- Accounts.update_avatar(conn, avatar) do
+      render(conn, "public_user.json", user: user)
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    with user <- Accounts.get_user!(id) do
-      render(conn, "user_profile.json", %{user: user})
+  def update(conn, %{"bio" => bio}) do
+    with {:ok, user } <- Accounts.update_bio(conn, bio) do
+      render(conn, "public_user.json", user: user)
     end
   end
 

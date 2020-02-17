@@ -97,6 +97,18 @@ defmodule Twitterclone.Subscriptions do
     |> Repo.one!()
   end
 
+  def get_users_from_follow(follows) do
+    users = Enum.reduce(follows, [], fn follow, list -> [follow.user | list] end)
+    users = Enum.uniq(users)
+    users
+  end
+
+  def get_users_from_subscriptions(subs) do
+    users = Enum.reduce(subs, [], fn subs, list -> [subs.subject | list] end)
+    users = Enum.uniq(users)
+    users
+  end
+
   @doc false
   def preload_follow_user(follower) do
     follower |> Repo.preload(:user)

@@ -1,12 +1,12 @@
 defmodule TwittercloneWeb.UserDevice.SubscriptionView do
   use TwittercloneWeb, :view
 
-  alias TwittercloneWeb.TypeConverter
+  alias TwittercloneWeb.TypeConverter, as: Convert
   alias TwittercloneWeb.Accounts.UserView
   alias TwittercloneWeb.UserDevice.SubscriptionView
 
-  def render("show.json", %{sub: sub}) do
-    %{ Integer.to_string(sub.subject.id) => %{
+  def render("subscription_with_user.json", %{sub: sub}) do
+    %{ Integer.to_string(sub.id) => %{
          id: sub.id,
          subject: render_one(sub.subject, UserView, "public_user.json", as: :user),
          inserted_at: sub.inserted_at,
@@ -15,15 +15,22 @@ defmodule TwittercloneWeb.UserDevice.SubscriptionView do
      }
   end
 
-  def render("data_map.json", %{subs: subs}) do
-    maps = render_many(subs, SubscriptionView, "show.json", as: :sub)
-    %{ list: render_many(subs, SubscriptionView, "subscription_id.json", as: :subscription),
-       data_map: TypeConverter.maplist_to_map(maps)
+  def render("subscription.json", %{sub: sub}) do
+    %{ Integer.to_string(sub.id) => %{
+         id: sub.id,
+         subject_id: sub.subject.id,
+         inserted_at: sub.inserted_at,
+         updated_at: sub.updated_at
+       }
      }
   end
 
-  def render("subscription_id.json", %{subscription: subscription}) do
-    (subscription.subject.id)
+  def render("subscriptions_map.json", %{subs: subs, users: users}) do
+    subs = render_many(subs, SubscriptionView, "subscription.json", as: :sub)
+    users = render_many(users, UserView, "data_map_user.json", as: :user)
+    %{ subscriptions: Convert.maplist_to_map(subs),
+       users: Convert.maplist_to_map(users)
+     }
   end
 
   def render("deleted.json", %{}) do

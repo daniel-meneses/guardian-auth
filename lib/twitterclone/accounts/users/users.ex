@@ -14,7 +14,18 @@ defmodule Twitterclone.Accounts.Users do
 
   def get_user_by_id(id) do
     Repo.get(User, id)
-    |> Repo.preload([:avatar])
+  end
+
+  def update_user_avatar(user_id, avatar) do
+    user = get_user_by_id(user_id)
+    User.avatar_changeset(user, %{avatar: avatar})
+    |> Repo.update()
+  end
+
+  def update_user_bio(user_id, bio) do
+    user = get_user_by_id(user_id)
+    User.bio_changeset(user, %{bio: bio})
+    |> Repo.update()
   end
 
   def preload_user_posts(user) do

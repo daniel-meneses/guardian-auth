@@ -1,21 +1,15 @@
 defmodule TwittercloneWeb.Accounts.AvatarController do
   use TwittercloneWeb, :controller
 
-  alias Twitterclone.Accounts
-  alias Twitterclone.Guardian.Plug
-
-  def create(conn, %{"image" => imageURL}) do
-    with {:ok, _imageURL} <- Accounts.save_avatar_url(conn, imageURL) do
-      id = Plug.current_resource(conn)
-      with user <- Accounts.get_user!(id) do
-        render(conn, "success.json", %{user: user})
-      end
+  def create(conn, %{"url" => url}) do
+    with {:ok, user} <- Accounts.update_avatar(url) do
+      render(conn, "user.json", url: url)
     end
   end
 
   def create(conn, _params) do
-    with {:ok, url} <- Accounts.return_presigned_url() do
-      render(conn, "presigned_url.json", url: url)
+    with {:ok, presigned_url} <- Accounts.get_avatar_presigned_url() do
+      render(conn, "presigned_url.json", url: presigned_url)
     end
   end
 
