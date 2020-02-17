@@ -1,9 +1,9 @@
 defmodule TwittercloneWeb.Accounts.AvatarController do
   use TwittercloneWeb, :controller
 
-  def create(conn, %{"url" => url}) do
-    with {:ok, user} <- Accounts.update_avatar(url) do
-      render(conn, "user.json", url: url)
+  def create(conn, %{"image" => image} = params) do
+    with {:ok, user} <- Accounts.update_avatar(conn, image) do
+      render(conn, "user.json", user: user)
     end
   end
 
