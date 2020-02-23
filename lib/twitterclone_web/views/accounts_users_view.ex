@@ -16,7 +16,7 @@ defmodule TwittercloneWeb.Accounts.UserView do
 
   def render("created.json", %{token_refresh: token_refresh, token_access: token_access, user: user}) do
     %{
-      user: render_one(user, UserView, "public_user.json"),
+      users: render_one(user, UserView, "data_map_user.json"),
       token_refresh: token_refresh,
       token_access: token_access
     }

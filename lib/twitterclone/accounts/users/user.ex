@@ -12,7 +12,7 @@ defmodule Twitterclone.Accounts.Users.User do
     field :first_name, :string
     field :last_name, :string
     field :bio, :string, default: ""
-    field :avatar, :string, default: ""
+    field :avatar, :string, default: "https://images-03.s3-ap-southeast-2.amazonaws.com/user_placeholder.png"
     field :device_id, :string
     has_many :user_subscriptions, Subscription, foreign_key: :user_id, references: :id
     has_many :posts, Post, foreign_key: :user_id, references: :id
