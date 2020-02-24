@@ -13,7 +13,7 @@ defmodule Twitterclone.Accounts.Users do
   end
 
   def get_user_by_id(id) do
-    Repo.get(User, id)
+    Repo.get!(User, id)
   end
 
   def update_user_avatar(user_id, avatar) do

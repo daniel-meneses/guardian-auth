@@ -11,6 +11,12 @@ defmodule Twitterclone.Accounts do
   Gets a single user.
   Raises `Ecto.NoResultsError` if the User does not exist.
   """
+
+  def get_user_by_id(id) do
+    Users.get_user_by_id(id)
+    |> Users.preload_user_posts()
+  end
+
   def get_user(conn) do
     user_id = Plug.current_resource(conn)
     Users.get_user_by_id(user_id)
