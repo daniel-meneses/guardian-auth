@@ -5,14 +5,10 @@ defmodule TwittercloneWeb.UserDevice.FollowerView do
   alias TwittercloneWeb.Accounts.UserView
   alias TwittercloneWeb.UserDevice.FollowerView
 
-  def render("follower.json", %{follow: follow}) do
-    %{ Integer.to_string(follow.user.id) => %{
-       id: follow.id,
-       user: render_one(follow.user, UserView, "public_user.json", as: :user),
-       inserted_at: follow.inserted_at,
-       updated_at: follow.updated_at
-       }
-     }
+  def render("follower.json", %{follow: follow, user: user}) do
+    %{ follow: render_one(follow, FollowerView, "follow.json", as: :follow),
+       users: render_one(user, UserView, "data_map_user.json", as: :user)
+    }
   end
 
   def render("follow.json", %{follow: follow}) do

@@ -28,6 +28,9 @@ defmodule Twitterclone.Accounts.Users.User do
     |> validate_length(:first_name, max: 24)
     |> validate_length(:last_name, max: 24)
     |> validate_length(:alias, max: 24)
+    |> validate_format(:alias, ~r/^[[:alpha:]]+$/)
+    |> validate_format(:first_name, ~r/^[[:alpha:]]+$/)
+    |> validate_format(:last_name, ~r/^[[:alpha:]]+$/)
     |> cast_assoc(:credential, required: true, with: &Credential.changeset/2)
   end
 

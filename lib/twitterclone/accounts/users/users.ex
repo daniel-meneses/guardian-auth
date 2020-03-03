@@ -8,7 +8,6 @@ defmodule Twitterclone.Accounts.Users do
   def create_user(attrs) do
     %User{}
     |> User.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     |> Repo.insert()
   end
 
