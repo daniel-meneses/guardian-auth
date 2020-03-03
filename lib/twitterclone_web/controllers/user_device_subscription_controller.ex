@@ -2,6 +2,7 @@ defmodule TwittercloneWeb.UserDevice.SubscriptionController do
   use TwittercloneWeb, :controller
 
   alias Twitterclone.Subscriptions
+  alias Twitterclone.Accounts
 
   def index(conn, params) do
     with subs <- Subscriptions.get_all_subscriptions(conn, params) do
@@ -13,7 +14,9 @@ defmodule TwittercloneWeb.UserDevice.SubscriptionController do
 
   def create(conn, params) do
     with {:ok, sub} <- Twitterclone.create_subscription_request(conn, params) do
-      conn |> put_status(:created) |> render("subscription.json", %{sub: sub})
+      with user <- Twitterclone.Accounts.get_user_by_id(sub.subject.id) do
+        conn |> put_status(:created) |> render("subscription2.json", %{sub: sub, user: user})
+      end
     end
   end
 

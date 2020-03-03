@@ -22,6 +22,19 @@ defmodule TwittercloneWeb.UserDevice.SubscriptionView do
          inserted_at: sub.inserted_at,
          updated_at: sub.updated_at
        }
+
+     }
+  end
+
+  def render("subscription2.json", %{sub: sub, user: user}) do
+    %{ subscriptions:
+      %{Integer.to_string(sub.id) => %{
+         id: sub.id,
+         subject_id: sub.subject.id,
+         inserted_at: sub.inserted_at,
+         updated_at: sub.updated_at
+       }},
+       users: render_one(user, UserView, "data_map_user.json", as: :user)
      }
   end
 
