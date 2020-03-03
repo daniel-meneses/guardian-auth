@@ -13,9 +13,10 @@ defmodule TwittercloneWeb.Accounts.UserController do
     end
   end
 
+
   def update(conn, %{"bio" => bio}) do
     with {:ok, user } <- Accounts.update_bio(conn, bio) do
-      render(conn, "public_user.json", user: user)
+      render(conn, "data_map_user.json", user: user)
     end
   end
 

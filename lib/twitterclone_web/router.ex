@@ -20,7 +20,7 @@ defmodule TwittercloneWeb.Router do
 
   scope "/api/v1/accounts", TwittercloneWeb.Accounts do
     pipe_through :api
-    resources "/user", UserController, only: [:create, :update]
+    post "/user", UserController, :create
     resources "/session", SessionController, only: [:create, :delete]
     pipe_through :authenticate_refresh
     resources "/refresh", RefreshController, only: [:create]
@@ -29,6 +29,7 @@ defmodule TwittercloneWeb.Router do
   scope "/api/v1/accounts", TwittercloneWeb.Accounts do
     pipe_through [:api, :authenticate_access]
     resources "/avatar", AvatarController, only: [:create]
+    post "/user/update", UserController, :update
   end
 
   scope "/api/v1", TwittercloneWeb do

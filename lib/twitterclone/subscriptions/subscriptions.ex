@@ -93,7 +93,7 @@ defmodule Twitterclone.Subscriptions do
   @doc false
   def get_follow_by_id(conn, id) do
     followers_query(conn)
-    |> where([q], q.id == ^id)
+    |> where([q], q.user_id == ^id)
     |> Repo.one!()
   end
 
