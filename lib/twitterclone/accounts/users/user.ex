@@ -43,6 +43,7 @@ defmodule Twitterclone.Accounts.Users.User do
   def bio_changeset(%User{} = user, attrs) do
     user
     |> cast(attrs, [:bio])
+    |> validate_required([:bio])
     |> validate_length(:bio, max: 244)
   end
 
