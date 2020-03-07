@@ -3,5 +3,6 @@
 /db
 /deps
 /*.ez
+.env
 
 /config/prod.secret.exs
