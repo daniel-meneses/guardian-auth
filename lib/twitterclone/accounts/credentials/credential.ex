@@ -21,9 +21,10 @@ defmodule Twitterclone.Accounts.Credentials.Credential do
     |> cast(attrs, [:email, :password, :password_confirmation])
     |> validate_required([:email, :password, :password_confirmation])
     |> validate_format(:email, ~r/@/)
-    |> validate_length(:password, min: 8)
+    |> validate_length(:password, min: 6)
     |> validate_confirmation(:password)
     |> unique_constraint(:email)
+    |> downcase_value
     |> put_password_hash
   end
 
@@ -33,6 +34,10 @@ defmodule Twitterclone.Accounts.Credentials.Credential do
         -> put_change(changeset, :password_hash, Bcrypt.hashpwsalt(password))
       _ -> changeset
     end
+  end
+
+  def downcase_value(changeset) do
+    update_change(changeset, :email, &String.downcase/1)
   end
 
 end

@@ -28,9 +28,11 @@ defmodule Twitterclone.Accounts.Users.User do
     |> validate_length(:first_name, max: 24)
     |> validate_length(:last_name, max: 24)
     |> validate_length(:alias, max: 24)
-    |> validate_format(:alias, ~r/^[[:alpha:]]+$/)
+    |> validate_format(:alias, ~r/^[[:alnum:]]+$/)
     |> validate_format(:first_name, ~r/^[[:alpha:]]+$/)
     |> validate_format(:last_name, ~r/^[[:alpha:]]+$/)
+    |> downcase_value
+    |> unique_constraint(:alias)
     |> cast_assoc(:credential, required: true, with: &Credential.changeset/2)
   end
 
@@ -44,6 +46,10 @@ defmodule Twitterclone.Accounts.Users.User do
     user
     |> cast(attrs, [:bio])
     |> validate_length(:bio, max: 244)
+  end
+
+  def downcase_value(changeset) do
+    update_change(changeset, :alias, &String.downcase/1)
   end
 
 end

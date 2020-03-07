@@ -11,5 +11,6 @@ defmodule Twitterclone.Repo.Migrations.CreateUsers do
       add :avatar, :string
       timestamps()
     end
+    create unique_index(:users, [:alias])
   end
 end
