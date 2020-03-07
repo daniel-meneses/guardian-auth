@@ -86,7 +86,8 @@ defmodule Twitterclone.Subscriptions do
   @doc false
   def update_follow_accepted(follow, accepted) do
     accepted = cast_param_to_bool(accepted)
-    Ecto.Changeset.cast(follow, %{accepted: accepted}, [:accepted])
+    rejected = !accepted
+    Ecto.Changeset.cast(follow, %{accepted: accepted, rejected: rejected}, [:accepted, :rejected])
     |> Repo.update()
   end
 
