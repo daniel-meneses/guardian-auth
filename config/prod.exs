@@ -15,7 +15,7 @@ config :twitterclone, TwittercloneWeb.Endpoint,
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-config :twitterclone, TwittercloneWeb.Repo,
+config :twitterclone, Twitterclone.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
