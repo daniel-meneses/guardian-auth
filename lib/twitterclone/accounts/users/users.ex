@@ -3,7 +3,6 @@ defmodule Twitterclone.Accounts.Users do
   import Ecto.Query, warn: false
   alias Twitterclone.Repo
   alias Twitterclone.Accounts.Users.User
-  alias Twitterclone.Accounts.Credentials.Credential
 
   def create_user(attrs) do
     %User{}
