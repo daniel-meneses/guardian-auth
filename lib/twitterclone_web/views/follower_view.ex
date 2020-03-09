@@ -1,9 +1,5 @@
-defmodule TwittercloneWeb.UserDevice.FollowerView do
+defmodule TwittercloneWeb.FollowerView do
   use TwittercloneWeb, :view
-
-  alias TwittercloneWeb.TypeConverter, as: Convert
-  alias TwittercloneWeb.Accounts.UserView
-  alias TwittercloneWeb.UserDevice.FollowerView
 
   def render("follower.json", %{follow: follow, user: user}) do
     %{ follow: render_one(follow, FollowerView, "follow.json", as: :follow),

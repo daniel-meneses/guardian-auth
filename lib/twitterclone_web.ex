@@ -25,9 +25,10 @@ defmodule TwittercloneWeb do
       import TwittercloneWeb.Gettext
       alias TwittercloneWeb.Router.Helpers, as: Routes
       alias Twitterclone.Repo
-      alias Twitterclone.{Accounts, Subscriptions, UserDevice}
+      alias Twitterclone.{Accounts, Subscriptions, Likes, Posts, RequireParams}
+      alias Twitterclone.Accounts
+      alias Twitterclone.Accounts.Users
       alias Twitterclone.Accounts.Users.User
-      alias Twitterclone.RequireParams
       action_fallback TwittercloneWeb.FallbackController
     end
   end
@@ -40,10 +41,15 @@ defmodule TwittercloneWeb do
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
-
       import TwittercloneWeb.ErrorHelpers
       import TwittercloneWeb.Gettext
+      import Kerosene.JSON
+
       alias TwittercloneWeb.Router.Helpers, as: Routes
+      alias TwittercloneWeb.Accounts.UserView
+      alias TwittercloneWeb.{PostView, FollowerView, SubscriptionView}
+      alias TwittercloneWeb.TypeConverter, as: Convert
+
     end
   end
 

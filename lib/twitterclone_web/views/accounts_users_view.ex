@@ -1,9 +1,6 @@
 defmodule TwittercloneWeb.Accounts.UserView do
   use TwittercloneWeb, :view
 
-  alias TwittercloneWeb.Accounts.UserView
-  alias TwittercloneWeb.UserDevice.PostView
-
   def render("public_user.json", %{user: user}) do
     %{user_id: user.id,
       alias: user.alias,

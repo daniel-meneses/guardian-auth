@@ -1,7 +1,5 @@
-defmodule TwittercloneWeb.UserDevice.PostView do
+defmodule TwittercloneWeb.PostView do
   use TwittercloneWeb, :view
-
-  alias TwittercloneWeb.UserDevice.PostView
 
   def render("show.json", %{post: post}) do
     %{ Integer.to_string(post.id) => %{

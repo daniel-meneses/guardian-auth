@@ -18,16 +18,10 @@ defmodule Twitterclone.Feed do
       |> Posts.reverse_and_paginate
   end
 
-  def get_all_users_from_feed(feed) do
-
-  end
-
   def get_user_feed(%{"id" => id}) do
     {products, kerosene} =
       Posts.get_all_post_by_user_id(id)
       |> Posts.reverse_and_paginate
   end
-
-
 
 end

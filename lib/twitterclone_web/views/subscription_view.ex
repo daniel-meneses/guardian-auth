@@ -1,9 +1,5 @@
-defmodule TwittercloneWeb.UserDevice.SubscriptionView do
+defmodule TwittercloneWeb.SubscriptionView do
   use TwittercloneWeb, :view
-
-  alias TwittercloneWeb.TypeConverter, as: Convert
-  alias TwittercloneWeb.Accounts.UserView
-  alias TwittercloneWeb.UserDevice.SubscriptionView
 
   def render("subscription_with_user.json", %{sub: sub}) do
     %{ Integer.to_string(sub.id) => %{

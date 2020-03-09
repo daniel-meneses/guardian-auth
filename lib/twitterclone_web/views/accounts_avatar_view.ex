@@ -1,8 +1,6 @@
 defmodule TwittercloneWeb.Accounts.AvatarView do
   use TwittercloneWeb, :view
 
-  alias TwittercloneWeb.Accounts.UserView
-
   def render("presigned_url.json", %{url: url}) do
     %{ url: url}
   end

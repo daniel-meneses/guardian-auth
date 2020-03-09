@@ -14,7 +14,7 @@ defmodule TwittercloneWeb.FeedController do
     end
   end
 
-  def index(conn, params) do
+  def index(conn, _params) do
     with {feed, kerosene} <- Twitterclone.Feed.get_global_feed() do
       users = Enum.reduce(feed, [], fn post, list -> [post.user | list] end)
       users = Enum.uniq(users)

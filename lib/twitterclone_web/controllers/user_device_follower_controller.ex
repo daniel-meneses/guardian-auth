@@ -1,4 +1,4 @@
-defmodule TwittercloneWeb.UserDevice.FollowerController do
+defmodule TwittercloneWeb.FollowerController do
   use TwittercloneWeb, :controller
 
   def index(conn, params) do
@@ -16,10 +16,5 @@ defmodule TwittercloneWeb.UserDevice.FollowerController do
       end
   end
 
-  def delete(conn, params) do
-    with {:ok, _} <- UserDevice.delete_like(conn, params) do
-      render(conn, "deleted.json")
-    end
-  end
 
 end

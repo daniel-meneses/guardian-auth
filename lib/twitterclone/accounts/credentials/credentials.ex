@@ -4,8 +4,6 @@ defmodule Twitterclone.Accounts.Credentials do
   alias Twitterclone.Accounts.Credentials.Credential
   alias Comeonin.Bcrypt
 
-  import Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
-
   def check_password(email, password) do
     case get_by_email(email) do
       nil -> Bcrypt.dummy_checkpw()

@@ -18,28 +18,30 @@ defmodule TwittercloneWeb.Router do
     plug Twitterclone.Guardian.AuthPipeline
   end
 
+  # Unauthenticated routes
   scope "/api/v1/accounts", TwittercloneWeb.Accounts do
     pipe_through :api
     post "/user", UserController, :create
     resources "/session", SessionController, only: [:create, :delete]
-    pipe_through :authenticate_refresh
+  end
+
+  # Refresh token endpoint
+  scope "/api/v1/accounts", TwittercloneWeb.Accounts do
+    pipe_through [:api, :authenticate_refresh]
     resources "/refresh", RefreshController, only: [:create]
   end
 
-  scope "/api/v1/accounts", TwittercloneWeb.Accounts do
+  scope "/api/v1/accounts/user", TwittercloneWeb.Accounts do
     pipe_through [:api, :authenticate_access]
-    resources "/avatar", AvatarController, only: [:create]
-    post "/user/update", UserController, :update
+    post "/update", UserController, :update
+    get "/avatar/presigned", AvatarController, :show
+    post "/avatar", AvatarController, :update
   end
 
   scope "/api/v1", TwittercloneWeb do
     pipe_through [:api, :authenticate_access]
     get "/feed/global", FeedController, :index
     get "/feed/user/:id", FeedController, :index
-  end
-
-  scope "/api/v1/user_device", TwittercloneWeb.UserDevice do
-    pipe_through [:api, :authenticate_access]
     resources "/post", PostController, only: [:create]
     resources "/like", LikeController, only: [:index, :create, :delete]
     resources "/subscription", SubscriptionController, only: [:index, :create, :delete]
