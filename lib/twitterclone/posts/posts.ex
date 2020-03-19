@@ -10,6 +10,10 @@ defmodule Twitterclone.Posts do
     Plug.current_resource(conn)
   end
 
+  defp post_base_query() do
+    from(p in Post, order_by: [desc: p.inserted_at, desc: p.id])
+  end
+
   def create_post(conn, %{"message" => message}) do
     attrs = %{user_id: get_user_id(conn), message: message}
     Post.changeset(%Post{}, attrs)
@@ -27,9 +31,10 @@ defmodule Twitterclone.Posts do
   end
 
   def get_all_post_by_user_id(id) do
-    Post
+    query = post_base_query
     |> where([p], p.user_id==^id)
     |> preload_users_likes
+    Repo.paginate(query, cursor_fields: [:inserted_at, :id])
   end
 
   defp preload_users_likes(obj) do
@@ -38,10 +43,15 @@ defmodule Twitterclone.Posts do
     |> preload(:likes)
   end
 
-  def reverse_and_paginate(obj) do
-    obj
-    |> reverse_order
-    |> Repo.paginate()
+
+  def paginate_with_after(afterCursor) do
+    query = post_base_query |> preload_users_likes
+    Repo.paginate(query, after: afterCursor, cursor_fields: [:inserted_at, :id])
+  end
+
+  def paginate() do
+    query = post_base_query |> preload_users_likes
+    Repo.paginate(query, cursor_fields: [:inserted_at, :id])
   end
 
 end

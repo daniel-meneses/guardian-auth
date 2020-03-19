@@ -12,16 +12,20 @@ defmodule Twitterclone.Feed do
     |> Repo.preload(:user_subscriptions)
   end
 
+  def get_global_feed(afterCursor) do
+    %{entries: entries, metadata: metadata} = Posts.paginate_with_after(afterCursor)
+    {entries, metadata}
+  end
+
   def get_global_feed() do
-    {products, kerosene} =
-      Posts.get_all_post()
-      |> Posts.reverse_and_paginate
+    %{entries: entries, metadata: metadata} = Posts.paginate()
+    {entries, metadata}
   end
 
   def get_user_feed(%{"id" => id}) do
-    {products, kerosene} =
-      Posts.get_all_post_by_user_id(id)
-      |> Posts.reverse_and_paginate
+  #  {products, kerosene} =
+      %{entries: entries, metadata: metadata} = Posts.get_all_post_by_user_id(id)
+      {entries, metadata}
   end
 
 end
