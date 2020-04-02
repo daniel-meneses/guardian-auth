@@ -3,7 +3,6 @@ defmodule Twitterclone.Subscriptions do
   import Ecto.Query, warn: false
   import Ecto.Type
   alias Twitterclone.{Repo, Guardian.Plug}
-  alias Twitterclone.{Post, Like}
   alias Twitterclone.Subscriptions.Subscription
 
   @doc false

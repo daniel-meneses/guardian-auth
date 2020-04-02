@@ -3,7 +3,7 @@ defmodule Twitterclone.Accounts do
   The Accounts context.
   Serves as public API for managing users, user authentication, and user preferences.
   """
-  alias Twitterclone.{Guardian, Guardian.Plug}
+  alias Twitterclone.{Guardian.Plug}
   alias Twitterclone.Accounts.Users
   alias Twitterclone.Accounts.Credentials
 
@@ -55,9 +55,19 @@ defmodule Twitterclone.Accounts do
   Accepts refresh token and returns access token on success.
   Returns __ on fail.
   """
-  def refresh_token(conn) do
-    user = Plug.current_resource(conn)
-    Guardian.encode_and_sign(user, %{}, token_type: "access")
+  def refresh_token(access, refresh) do
+    case refresh_token_is_valid(refresh) do
+      true -> Twitterclone.Guardian.refresh(access, ttl: {2, :weeks})
+        false -> false
+    end
+  end
+
+  def refresh_token_is_valid(token) do
+    claims =  %{typ: "refresh", iss: "twitterclone"}
+    case Twitterclone.Guardian.decode_and_verify(token, claims) do
+      {:ok, claims} -> claims["exp"] > Guardian.timestamp()
+      _ -> false
+    end
   end
 
   def get_avatar_presigned_url() do
@@ -80,8 +90,8 @@ defmodule Twitterclone.Accounts do
 
   @doc false
   defp encode_tokens(user) do
-    {:ok, token_refresh, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "refresh")
-    {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
+    {:ok, token_refresh, _claims} = Twitterclone.Guardian.encode_and_sign(user, %{}, token_type: "refresh")
+    {:ok, token_access, _claims} = Twitterclone.Guardian.encode_and_sign(user, %{}, token_type: "access")
     {:ok, user, token_refresh, token_access}
   end
 

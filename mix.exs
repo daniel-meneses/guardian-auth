@@ -5,7 +5,7 @@ defmodule Twitterclone.MixProject do
     [
       app: :twitterclone,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9.4",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -46,13 +46,13 @@ defmodule Twitterclone.MixProject do
       {:bcrypt_elixir, "~> 1.0"},
       {:guardian, "~> 2.0"},
       {:cors_plug, "~> 2.0"},
-      {:kerosene, "~> 0.9.0"},
       {:etag_plug, "~> 0.2.0"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:hackney, "~> 1.15"},
       {:sweet_xml, "~> 0.6"},
-      {:uuid, "~> 1.1.8" }
+      {:uuid, "~> 1.1.8" },
+      {:paginator, "~> 0.6"}
     ]
   end
 

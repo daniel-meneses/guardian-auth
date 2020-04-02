@@ -21,7 +21,8 @@ defmodule TwittercloneWeb.Endpoint do
     plug Phoenix.CodeReloader
   end
 
-  plug CORSPlug
+  plug CORSPlug, origin: ["http://127.0.0.1:3000", "http://localhost:3000", "https://arcane-shelf-19658.herokuapp.com"]
+
   plug Plug.RequestId
   plug Plug.Logger
 

@@ -14,6 +14,22 @@ defmodule TwittercloneWeb.FeedController do
     end
   end
 
+  def index(conn, %{"afterCursor" => afterCursor}) do
+    with {entries, metadata} <- Twitterclone.Feed.get_global_feed(afterCursor) do
+      users = Enum.reduce(entries, [], fn post, list -> [post.user | list] end)
+      users = Enum.uniq(users)
+      render(conn, "data_map_pagination.json", feed: entries, metadata: metadata, users: users)
+    end
+  end
+
+  def index(conn, _params) do
+    with {entries, metadata} <- Twitterclone.Feed.get_global_feed() do
+      users = Enum.reduce(entries, [], fn post, list -> [post.user | list] end)
+      users = Enum.uniq(users)
+      render(conn, "data_map_pagination.json", feed: entries, metadata: metadata, users: users)
+    end
+  end
+
   def index(conn, _params) do
     with {feed, kerosene} <- Twitterclone.Feed.get_global_feed() do
       users = Enum.reduce(feed, [], fn post, list -> [post.user | list] end)

@@ -1,7 +1,6 @@
 defmodule Twitterclone.Accounts.Credentials.Credential do
   use Ecto.Schema
   import Ecto.Changeset
-  import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
   alias Twitterclone.Accounts.Users.User
   alias Comeonin.Bcrypt
