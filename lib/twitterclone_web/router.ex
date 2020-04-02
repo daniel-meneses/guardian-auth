@@ -4,42 +4,36 @@ defmodule TwittercloneWeb.Router do
   pipeline :api do
     plug CORSPlug, origin: "http://localhost:3000"
     plug :accepts, ["json"]
+    plug :fetch_session
   end
 
-  pipeline :authenticate_access do
-    @claims %{"typ" => "access", "iss" => "twitterclone"}
-    plug Guardian.Plug.VerifyHeader, claims: @claims, realm: "Bearer", module: Twitterclone.Guardian, error_handler: Twitterclone.AuthErrorHandler
+  pipeline :csrf do
+    # need to look into this
+    # https://hexdocs.pm/plug/Plug.CSRFProtection.html
+    plug Plug.CSRFProtection
+  end
+
+  pipeline :authenticated do
     plug Twitterclone.Guardian.AuthPipeline
   end
 
-  pipeline :authenticate_refresh do
-    @claims %{"typ" => "refresh", "iss" => "twitterclone"}
-    plug Guardian.Plug.VerifyHeader, claims: @claims, realm: "Bearer", module: Twitterclone.Guardian, error_handler: Twitterclone.AuthErrorHandler
-    plug Twitterclone.Guardian.AuthPipeline
-  end
-
-  # Unauthenticated routes
   scope "/api/v1/accounts", TwittercloneWeb.Accounts do
     pipe_through :api
     post "/user", UserController, :create
     resources "/session", SessionController, only: [:create, :delete]
-  end
-
-  # Refresh token endpoint
-  scope "/api/v1/accounts", TwittercloneWeb.Accounts do
-    pipe_through [:api, :authenticate_refresh]
+    pipe_through :authenticated
     resources "/refresh", RefreshController, only: [:create]
   end
 
   scope "/api/v1/accounts/user", TwittercloneWeb.Accounts do
-    pipe_through [:api, :authenticate_access]
+    pipe_through [:api, :csrf, :authenticated]
     post "/update", UserController, :update
     get "/avatar/presigned", AvatarController, :show
     post "/avatar", AvatarController, :update
   end
 
   scope "/api/v1", TwittercloneWeb do
-    pipe_through [:api, :authenticate_access]
+    pipe_through [:api, :csrf, :authenticated]
     get "/feed/global", FeedController, :index
     get "/feed/user/:id", FeedController, :index
     resources "/post", PostController, only: [:create]
