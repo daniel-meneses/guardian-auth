@@ -3,9 +3,17 @@ defmodule TwittercloneWeb.Accounts.SessionController do
 
   def create(conn, params) do
     with {:ok, user, token_refresh, token_access } <- Accounts.create_session(params) do
-      con = put_session(conn, :token_refresh, token_refresh)
+      conn = put_session(conn, :token_refresh, token_refresh)
       |> Twitterclone.Guardian.Plug.sign_in(user, typ: "access")
-      |> render("created.json", user: user, token_refresh: token_refresh, token_access: token_access)
+      |> render("show.json", user: user)
+    end
+  end
+
+  def show(conn, params) do
+    IO.inspect conn
+    with user <- Accounts.get_user(conn) do
+      conn
+      |> render("show.json", user: user)
     end
   end
 

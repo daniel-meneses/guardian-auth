@@ -3,9 +3,15 @@ defmodule TwittercloneWeb.Accounts.SessionView do
 
   def render("created.json", %{user: user, token_refresh: token_refresh, token_access: token_access}) do
     %{
-      users: render_one(user, UserView, "data_map_user.json"),
+      user: render_one(user, UserView, "data_map_user.json"),
       token_refresh: token_refresh,
       token_access: token_access
+    }
+  end
+
+  def render("show.json", %{user: user}) do
+    %{
+      user: render_one(user, UserView, "public_user.json"),
     }
   end
 

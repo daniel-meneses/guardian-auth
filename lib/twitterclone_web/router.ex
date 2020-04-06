@@ -10,7 +10,7 @@ defmodule TwittercloneWeb.Router do
   pipeline :csrf do
     # need to look into this
     # https://hexdocs.pm/plug/Plug.CSRFProtection.html
-    plug Plug.CSRFProtection
+    # plug Plug.CSRFProtection
   end
 
   pipeline :authenticated do
@@ -20,8 +20,9 @@ defmodule TwittercloneWeb.Router do
   scope "/api/v1/accounts", TwittercloneWeb.Accounts do
     pipe_through :api
     post "/user", UserController, :create
-    resources "/session", SessionController, only: [:create, :delete]
+    post "/session", SessionController, :create
     pipe_through :authenticated
+    get "/session", SessionController, :show
     resources "/refresh", RefreshController, only: [:create]
   end
 
