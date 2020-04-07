@@ -10,7 +10,7 @@ defmodule TwittercloneWeb.Router do
   pipeline :csrf do
     # need to look into this
     # https://hexdocs.pm/plug/Plug.CSRFProtection.html
-    # plug Plug.CSRFProtection
+    plug Plug.CSRFProtection
   end
 
   pipeline :authenticated do

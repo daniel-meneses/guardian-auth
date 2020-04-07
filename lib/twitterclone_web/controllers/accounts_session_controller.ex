@@ -10,7 +10,6 @@ defmodule TwittercloneWeb.Accounts.SessionController do
   end
 
   def show(conn, params) do
-    IO.inspect conn
     with user <- Accounts.get_user(conn) do
       conn
       |> render("show.json", user: user)
