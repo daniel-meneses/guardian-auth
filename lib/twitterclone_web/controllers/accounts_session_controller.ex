@@ -17,6 +17,7 @@ defmodule TwittercloneWeb.Accounts.SessionController do
   end
 
   def delete(conn, _) do
+    conn = configure_session(conn, drop: true)
     render(conn, "delete.json")
   end
 

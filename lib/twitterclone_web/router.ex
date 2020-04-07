@@ -23,6 +23,7 @@ defmodule TwittercloneWeb.Router do
     post "/session", SessionController, :create
     pipe_through :authenticated
     get "/session", SessionController, :show
+    delete "/session", SessionController, :delete
     resources "/refresh", RefreshController, only: [:create]
   end
 
