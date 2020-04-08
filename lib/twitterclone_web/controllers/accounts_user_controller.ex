@@ -3,7 +3,9 @@ defmodule TwittercloneWeb.Accounts.UserController do
 
   def create(conn, %{"user" => user_params}) do
     with {:ok, user, token_refresh, token_access } <- Accounts.create_user(user_params) do
-      render(conn, "public_user.json", user: user)
+      conn = put_session(conn, :token_refresh, token_refresh)
+      |> Twitterclone.Guardian.Plug.sign_in(user, typ: "access")
+      |> render("show.json", user: user)
     end
   end
 
