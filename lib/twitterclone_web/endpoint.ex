@@ -39,7 +39,7 @@ defmodule TwittercloneWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session,
     store: :cookie,
-    domain: [".herokuapp.com"],
+    domain: ".herokuapp.com",
     key: "_twitterclone_key",
     signing_salt: "6Si0v0Jl"
 
