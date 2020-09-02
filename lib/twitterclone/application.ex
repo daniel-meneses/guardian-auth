@@ -19,6 +19,7 @@ defmodule Twitterclone.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Twitterclone.Supervisor]
+    {Phoenix.PubSub, [name: Twitterclone.PubSub, adapter: Phoenix.PubSub.PG2]}
     Supervisor.start_link(children, opts)
   end
 

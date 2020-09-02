@@ -33,8 +33,8 @@ defmodule Twitterclone.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.0"},
-      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix, github: "phoenixframework/phoenix", branch: "master"},
+      {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
@@ -52,7 +52,7 @@ defmodule Twitterclone.MixProject do
       {:hackney, "~> 1.15"},
       {:sweet_xml, "~> 0.6"},
       {:uuid, "~> 1.1.8" },
-      {:paginator, "~> 0.6"}
+      {:paginator, "~> 1.0.1"}
     ]
   end
 

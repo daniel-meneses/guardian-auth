@@ -15,7 +15,7 @@ config :twitterclone, TwittercloneWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Sjz9aAaOUSzuZnB4hWIVJXuoCWlgAnsrvoahEDrAFHq+I2D6E0WJA2Bd4pjOV+9J",
   render_errors: [view: TwittercloneWeb.ErrorView, accepts: ~w(json)],
-  pubsub: [name: Twitterclone.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: Twitterclone.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,
