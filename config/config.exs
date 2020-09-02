@@ -19,6 +19,7 @@ config :twitterclone, TwittercloneWeb.Endpoint,
 
 # Configures Elixir's Logger
 config :logger, :console,
+  level: :debug,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
@@ -28,7 +29,7 @@ config :phoenix, :json_library, Jason
 # Guardian config
 config :twitterclone, Twitterclone.Guardian,
        issuer: "twitterclone",
-       secret_key: "tnXzUyMrtrt3E03X0LjPZm1wN52c3EK5UUdS+iSw/6Hc3k06qYi+/ZxBtZ2FIlhU",
+       secret_key: System.get_env("GUARDIAN_SECRET_KEY"),
        token_ttl: %{
          "refresh" => {16, :weeks},
          "access" => {1, :weeks},
