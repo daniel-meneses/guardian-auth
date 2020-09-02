@@ -114,9 +114,4 @@ defmodule Twitterclone.Subscriptions do
     follower |> Repo.preload(:user)
   end
 
-  @doc false
-  defp guard_no_accepted(params) do
-    Dict.get(params, "accepted", false)
-  end
-
 end

@@ -25,13 +25,8 @@ defmodule Twitterclone.Posts do
     |> preload_users_likes
   end
 
-  def get_all_post(%{"id" => id} = params) do
-    Post
-    |> preload_users_likes
-  end
-
   def get_all_post_by_user_id(id) do
-    query = post_base_query
+    query = post_base_query()
     |> where([p], p.user_id==^id)
     |> preload_users_likes
     Repo.paginate(query, cursor_fields: [:inserted_at, :id])
@@ -45,12 +40,12 @@ defmodule Twitterclone.Posts do
 
 
   def paginate_with_after(afterCursor) do
-    query = post_base_query |> preload_users_likes
+    query = post_base_query() |> preload_users_likes
     Repo.paginate(query, after: afterCursor, cursor_fields: [:inserted_at, :id])
   end
 
   def paginate() do
-    query = post_base_query |> preload_users_likes
+    query = post_base_query() |> preload_users_likes
     Repo.paginate(query, cursor_fields: [:inserted_at, :id])
   end
 

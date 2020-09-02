@@ -21,15 +21,14 @@ defmodule TwittercloneWeb.FeedView do
      }
   end
 
-
-    def render("data_map_pagination.json", %{feed: feed, metadata: metadata, users: users}) do
-      posts = render_many(feed, PostView, "show.json", as: :post)
-      users = render_many(users, UserView, "data_map_user.json", as: :user)
-      %{ timeline: render_many(feed, PostView, "post_id.json", as: :post),
-         posts: Convert.maplist_to_map(posts),
-         users: Convert.maplist_to_map(users),
-         after_cursor: metadata.after
-       }
-    end
+  def render("data_map_pagination.json", %{feed: feed, metadata: metadata, users: users}) do
+    posts = render_many(feed, PostView, "show.json", as: :post)
+    users = render_many(users, UserView, "data_map_user.json", as: :user)
+    %{ timeline: render_many(feed, PostView, "post_id.json", as: :post),
+       posts: Convert.maplist_to_map(posts),
+       users: Convert.maplist_to_map(users),
+       after_cursor: metadata.after
+     }
+  end
 
 end

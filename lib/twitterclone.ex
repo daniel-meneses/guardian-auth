@@ -64,8 +64,4 @@ defmodule Twitterclone do
     end
   end
 
-  def delete_follower(conn, params) do
-    IO.puts "hey"
-  end
-
 end
