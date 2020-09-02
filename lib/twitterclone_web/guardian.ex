@@ -11,17 +11,9 @@ defmodule Twitterclone.Guardian do
     end
   end
 
-  def subject_for_token(_, _) do
-    {:error, :reason_for_error}
-  end
-
   def resource_from_claims(claims) do
     id = claims["sub"]
     {:ok,  id}
-  end
-
-  def resource_from_claims(_claims) do
-    {:error, :reason_for_error}
   end
 
 end
