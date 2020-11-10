@@ -48,6 +48,12 @@ defmodule Twitterclone.Accounts.Users.User do
     |> validate_length(:bio, max: 244)
   end
 
+  def user_info_changeset(%User{} = user, attrs) do
+    user
+    |> cast(attrs, [:bio, :first_name, :last_name])
+    |> validate_length(:bio, max: 244)
+  end
+
   def downcase_value(changeset) do
     update_change(changeset, :alias, &String.downcase/1)
   end

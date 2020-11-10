@@ -17,4 +17,11 @@ defmodule TwittercloneWeb.SubscriptionController do
     end
   end
 
+  def delete(conn, params) do
+    with {:ok, sub} <- Twitterclone.delete_subscription_request(conn, params) do
+      IO.inspect sub
+      render(conn, "subscription_single.json", %{sub: sub})
+    end
+  end
+
 end

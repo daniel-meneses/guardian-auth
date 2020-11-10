@@ -20,8 +20,11 @@ defmodule Twitterclone do
 
   end
 
-  def delete_subscription_request() do
-
+  def delete_subscription_request(conn, params) do
+    with {:ok, sub} <- Subscriptions.delete_subscription(conn, params) do
+      IO.inspect sub
+      {:ok, Subscriptions.preload_subject_user(sub)}
+    end
   end
 
   @doc """

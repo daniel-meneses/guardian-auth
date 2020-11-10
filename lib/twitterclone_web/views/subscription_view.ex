@@ -11,6 +11,17 @@ defmodule TwittercloneWeb.SubscriptionView do
      }
   end
 
+  def render("subscription_single.json", %{sub: sub}) do
+    %{
+      subscriptions:
+      %{ Integer.to_string(sub.id) => %{
+        id: sub.id,
+        subject_id: sub.subject.id,
+        }
+      }
+    }
+  end
+
   def render("subscription.json", %{sub: sub}) do
     %{ Integer.to_string(sub.id) => %{
          id: sub.id,
@@ -18,7 +29,6 @@ defmodule TwittercloneWeb.SubscriptionView do
          inserted_at: sub.inserted_at,
          updated_at: sub.updated_at
        }
-
      }
   end
 

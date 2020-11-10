@@ -57,8 +57,7 @@ defmodule Twitterclone.Subscriptions do
 
   @doc false
   def delete_subscription(conn, %{"user_id" => subject_id}) do
-    sub_query(conn)
-    |> where([q], q.subject_id == ^subject_id)
+    Repo.get_by!(Subscription, [user_id: get_user_id(conn), subject_id: subject_id])
     |> Repo.delete()
   end
 

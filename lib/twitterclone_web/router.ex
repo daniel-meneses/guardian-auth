@@ -23,7 +23,7 @@ defmodule TwittercloneWeb.Router do
     post "/session", SessionController, :create
     pipe_through :authenticated
     get "/session", SessionController, :show
-    delete "/session", SessionController, :delete
+    delete "/session/delete", SessionController, :delete
     resources "/refresh", RefreshController, only: [:create]
   end
 
@@ -36,12 +36,16 @@ defmodule TwittercloneWeb.Router do
 
   scope "/api/v1", TwittercloneWeb do
     pipe_through [:api, :csrf, :authenticated]
-    get "/feed/global", FeedController, :index
-    get "/feed/user/:id", FeedController, :index
     resources "/post", PostController, only: [:create]
     resources "/like", LikeController, only: [:index, :create, :delete]
     resources "/subscription", SubscriptionController, only: [:index, :create, :delete]
     resources "/follower", FollowerController, only: [:index, :create]
+  end
+
+  scope "/api/v1", TwittercloneWeb do
+    pipe_through [:api, :csrf]
+    get "/feed/global", FeedController, :index
+    get "/feed/user/:id", FeedController, :index
   end
 
 end

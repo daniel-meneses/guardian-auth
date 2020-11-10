@@ -11,13 +11,13 @@ defmodule TwittercloneWeb.Accounts.UserController do
 
   def update(conn, %{"avatar" => avatar}) do
     with {:ok, user } <- Accounts.update_avatar(conn, avatar) do
-      render(conn, "public_user.json", user: user)
+      render(conn, "data_map_user.json", user: user)
     end
   end
 
 
-  def update(conn, %{"bio" => bio}) do
-    with {:ok, user } <- Accounts.update_bio(conn, bio) do
+  def update(conn, user_info) do
+    with {:ok, user } <- Accounts.update_user_info(conn, user_info) do
       render(conn, "data_map_user.json", user: user)
     end
   end

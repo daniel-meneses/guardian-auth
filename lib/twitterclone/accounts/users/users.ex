@@ -26,6 +26,12 @@ defmodule Twitterclone.Accounts.Users do
     |> Repo.update()
   end
 
+  def update_user_info(user_id, user_info) do
+    user = get_user_by_id(user_id)
+    User.user_info_changeset(user, user_info)
+    |> Repo.update()
+  end
+
   def preload_user_posts(user) do
     user
     |> Repo.preload([:posts, posts: :user, posts: :likes])

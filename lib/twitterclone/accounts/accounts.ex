@@ -88,6 +88,11 @@ defmodule Twitterclone.Accounts do
     Users.update_user_bio(user_id, bio)
   end
 
+  def update_user_info(conn, user_info) do
+    user_id = Plug.current_resource(conn)
+    Users.update_user_info(user_id, user_info)
+  end
+
   @doc false
   defp encode_tokens(user) do
     {:ok, token_refresh, _claims} = Twitterclone.Guardian.encode_and_sign(user, %{}, token_type: "refresh")
