@@ -7,7 +7,8 @@ defmodule TwittercloneWeb.PostView do
         post: post.message,
         user_id: post.user.id,
         created: post.inserted_at,
-        likes: length(post.likes)
+        likes: length(post.likes),
+        tags: Enum.map(post.tags,  fn tag -> tag.title end)
          }
      }
   end
