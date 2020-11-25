@@ -46,6 +46,7 @@ defmodule TwittercloneWeb.Router do
     pipe_through [:api, :csrf]
     get "/feed/global", FeedController, :index
     get "/feed/user/:id", FeedController, :index
+    get "/explore/tag/:id", ExploreController, :index
   end
 
 end
