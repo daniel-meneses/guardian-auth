@@ -69,4 +69,13 @@ defmodule Twitterclone.Posts do
     Repo.paginate(query, cursor_fields: [:inserted_at, :id])
   end
 
+  def get_trending_from_recent() do
+    posts = Repo.all from p in Post,
+      order_by: [desc: :inserted_at],
+      limit: 200,
+      preload: [:tags]
+    test1 = Enum.flat_map(posts, fn p -> p.tags end)
+    Enum.frequencies(test1) |> Enum.sort_by( &(elem(&1, 1)), :desc )
+  end
+
 end

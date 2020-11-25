@@ -29,8 +29,4 @@ defmodule Twitterclone.PostsTags do
     Repo.paginate(q, cursor_fields: [:inserted_at, :id])
   end
 
-  def paginate_posts() do
-
-  end
-
 end

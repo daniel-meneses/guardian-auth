@@ -3,6 +3,7 @@ defmodule TwittercloneWeb.ExploreController do
 
   alias Twitterclone.PostsTags
   alias Twitterclone.Repo
+  alias Twitterclone.Posts
 
   def index(conn, %{"id" => id} = params) do
     with tags <- PostsTags.get_posts_with_tag(id) do
