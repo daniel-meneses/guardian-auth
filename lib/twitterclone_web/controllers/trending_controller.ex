@@ -9,7 +9,7 @@ defmodule TwittercloneWeb.TrendingController do
           count: elem(c, 1)
         }
       end)
-      render(conn, "index.json", trending: trending)
+      render(conn, "index.json", trending: Enum.take(trending, 3))
     end
   end
 
