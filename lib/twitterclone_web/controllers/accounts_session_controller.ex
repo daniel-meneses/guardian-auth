@@ -1,24 +1,23 @@
 defmodule TwittercloneWeb.Accounts.SessionController do
   use TwittercloneWeb, :controller
 
+  plug :put_view, TwittercloneWeb.AccountsViews
+
   def create(conn, params) do
-    with {:ok, user, token_refresh, _token_access } <- Accounts.create_session(params) do
-      put_session(conn, :token_refresh, token_refresh)
-      |> Twitterclone.Guardian.Plug.sign_in(user, typ: "access")
-      |> render("show.json", user: user)
+    with {:ok, conn, user} <- Accounts.create_session(conn, params) do
+      render(conn, :account_user, user: user)
     end
   end
 
   def show(conn, _params) do
-    with user <- Accounts.get_user(conn) do
-      conn
-      |> render("show.json", user: user)
+    with user <- Accounts.get_current_user(conn) do
+      render(conn, :account_user, user: user)
     end
   end
 
   def delete(conn, _) do
     conn = configure_session(conn, drop: true)
-    render(conn, "delete.json")
+    json(conn, %{ deleted: true })
   end
 
 end

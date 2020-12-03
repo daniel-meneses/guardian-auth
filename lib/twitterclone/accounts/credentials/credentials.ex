@@ -11,12 +11,8 @@ defmodule Twitterclone.Accounts.Credentials do
     end
   end
 
-  def get_by_email(email) do
+  defp get_by_email(email) do
     Repo.get_by(Credential, email: String.downcase(email))
-  end
-
-  def preload_user(credentials) do
-    credentials
     |> Repo.preload(:user)
   end
 

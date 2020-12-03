@@ -1,8 +1,7 @@
-defmodule Twitterclone.Accounts.Users do
-
+defmodule Twitterclone.Users do
   import Ecto.Query, warn: false
   alias Twitterclone.Repo
-  alias Twitterclone.Accounts.Users.User
+  alias Twitterclone.Users.User
 
   def create_user(attrs) do
     %User{}
@@ -14,21 +13,9 @@ defmodule Twitterclone.Accounts.Users do
     Repo.get!(User, id)
   end
 
-  def update_user_avatar(user_id, avatar) do
-    user = get_user_by_id(user_id)
-    User.avatar_changeset(user, %{avatar: avatar})
-    |> Repo.update()
-  end
-
-  def update_user_bio(user_id, bio) do
-    user = get_user_by_id(user_id)
-    User.bio_changeset(user, %{bio: bio})
-    |> Repo.update()
-  end
-
   def update_user_info(user_id, user_info) do
-    user = get_user_by_id(user_id)
-    User.user_info_changeset(user, user_info)
+    get_user_by_id(user_id)
+    |> User.user_info_changeset(user_info)
     |> Repo.update()
   end
 

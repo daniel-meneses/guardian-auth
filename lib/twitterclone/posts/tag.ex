@@ -6,6 +6,7 @@ defmodule Twitterclone.Tags.Tag do
 
   schema "tags" do
     field :title, :string
+    belongs_to :post, Post
     timestamps()
   end
 
@@ -14,7 +15,6 @@ defmodule Twitterclone.Tags.Tag do
     tag
     |> cast(attrs, [:title])
     |> validate_required([:title])
-    |> unique_constraint([:title])
   end
 
 end

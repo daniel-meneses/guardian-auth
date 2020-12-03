@@ -3,17 +3,16 @@ defmodule Twitterclone.Posts.Post do
   import Ecto.Changeset
 
   alias Twitterclone.Likes.Like
-  alias Twitterclone.Posts.Post
-  alias Twitterclone.Accounts.Users.User
-  alias Twitterclone.Tags.Tag
+  alias Twitterclone.Posts.{Post, LinkPreview}
+  alias Twitterclone.Users.User
 
   schema "posts" do
     field :message, :string
     field :views, :integer
     belongs_to :user, User
     has_many :likes, Like, foreign_key: :post_id, references: :id
-    many_to_many :tags, Twitterclone.Tags.Tag,
-      join_through: Twitterclone.PostsTags
+    has_one :link_preview, LinkPreview, foreign_key: :post_id, references: :id
+    has_many :tags, Twitterclone.Tags.Tag, foreign_key: :post_id, references: :id
     timestamps()
   end
 
@@ -22,7 +21,7 @@ defmodule Twitterclone.Posts.Post do
     post
     |> cast(attrs, [:message, :user_id])
     |> validate_required([:message, :user_id])
-    |> validate_length(:message, max: 300)
+    |> validate_length(:message, max: 255)
     |> foreign_key_constraint(:user_id)
   end
 

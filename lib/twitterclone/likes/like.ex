@@ -3,7 +3,7 @@ defmodule Twitterclone.Likes.Like do
   import Ecto.Changeset
 
   alias Twitterclone.Posts.Post
-  alias Twitterclone.Accounts.Users.User
+  alias Twitterclone.Users.User
 
   schema "likes" do
     belongs_to :user, User

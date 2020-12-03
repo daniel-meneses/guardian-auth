@@ -11,6 +11,5 @@ defmodule Twitterclone.Repo.Migrations.CreatePosts do
     alter table(:posts) do
       modify :message, :text
     end
-  #  create index(:posts, [:user_id])
   end
 end

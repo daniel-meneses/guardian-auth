@@ -3,8 +3,8 @@ defmodule Twitterclone.Accounts do
   The Accounts context.
   Serves as public API for managing users, user authentication, and user preferences.
   """
-  alias Twitterclone.{Guardian.Plug}
-  alias Twitterclone.Accounts.Users
+  alias Twitterclone.Guardian
+  alias Twitterclone.Users
   alias Twitterclone.Accounts.Credentials
 
   @doc """
@@ -14,13 +14,13 @@ defmodule Twitterclone.Accounts do
 
   def get_user_by_id(id) do
     Users.get_user_by_id(id)
-    |> Users.preload_user_posts()
+    |> Users.preload_user_posts
   end
 
-  def get_user(conn) do
-    user_id = Plug.current_resource(conn)
-    Users.get_user_by_id(user_id)
-    |> Users.preload_user_posts()
+  def get_current_user(conn) do
+    Guardian.Plug.current_resource(conn)
+    |> Users.get_user_by_id
+    |> Users.preload_user_posts
   end
 
   @doc false
@@ -34,10 +34,10 @@ defmodule Twitterclone.Accounts do
   On success, return user struct with access, refresh tokens.
   On fail, return changeset error.
   """
-  def create_user(params) do
+  def create_new_user(conn, params) do
     user_params = format_credentials_params(params)
     with {:ok, user} <- Users.create_user(user_params) do
-      encode_tokens(user)
+      save_user_session(conn, user)
     end
   end
   @doc """
@@ -45,12 +45,31 @@ defmodule Twitterclone.Accounts do
   On success, return user struct with access, refresh tokens.
   On fail, return error.
   """
-  def create_session(%{"email" => email, "password" => password}) do
+  def create_session(conn, %{"email" => email, "password" => password}) do
     case Credentials.check_password(email, password) do
-      {cred, true} -> Credentials.preload_user(cred).user |> encode_tokens
+      { credentials, true} -> save_user_session(conn, credentials.user)
               _ -> {:error, :unprocessable_entity}
     end
   end
+
+  defp save_user_session(conn, user) do
+    conn = Guardian.Plug.sign_in(conn, user)
+    {:ok, conn, user}
+  end
+
+  def get_image_upload_presigned_url() do
+    ExAws.Config.new(:s3)
+    |> ExAws.S3.presigned_url(
+      :put, "images-03",
+      UUID.uuid4(),
+      [expires_in: 300, query_params: [{"ContentType", "image/jpeg"}]]) # 300 seconds
+  end
+
+  def update_user_info(conn, user_info) do
+    Guardian.Plug.current_resource(conn)
+    |> Users.update_user_info(user_info)
+  end
+
   @doc """
   Accepts refresh token and returns access token on success.
   Returns __ on fail.
@@ -70,33 +89,10 @@ defmodule Twitterclone.Accounts do
     end
   end
 
-  def get_avatar_presigned_url() do
-    ExAws.Config.new(:s3)
-    |> ExAws.S3.presigned_url(:put, "images-03",
-                UUID.uuid4(),
-                [expires_in: 300,
-                query_params: [{"ContentType", "image/jpeg"}]]) # 300 seconds
-  end
-
-  def update_avatar(conn, avatar) do
-    user_id = Plug.current_resource(conn)
-    Users.update_user_avatar(user_id, avatar)
-  end
-
-  def update_bio(conn, bio) do
-    user_id = Plug.current_resource(conn)
-    Users.update_user_bio(user_id, bio)
-  end
-
-  def update_user_info(conn, user_info) do
-    user_id = Plug.current_resource(conn)
-    Users.update_user_info(user_id, user_info)
-  end
-
   @doc false
   defp encode_tokens(user) do
-    {:ok, token_refresh, _claims} = Twitterclone.Guardian.encode_and_sign(user, %{}, token_type: "refresh")
-    {:ok, token_access, _claims} = Twitterclone.Guardian.encode_and_sign(user, %{}, token_type: "access")
+    {:ok, token_refresh, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "refresh")
+    {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
     {:ok, user, token_refresh, token_access}
   end
 
