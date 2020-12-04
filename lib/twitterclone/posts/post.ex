@@ -22,8 +22,8 @@ defmodule Twitterclone.Posts.Post do
     |> cast(attrs, [:message, :user_id])
     |> validate_required([:message, :user_id])
     |> validate_length(:message, max: 255)
+    |> cast_assoc(:link_preview, required: false, with: &LinkPreview.changeset/2)
     |> foreign_key_constraint(:user_id)
   end
-
 
 end

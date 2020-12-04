@@ -8,7 +8,6 @@ defmodule TwittercloneWeb.PostController do
 
   def index(conn, %{"subscriptions" => subscriptions} = params) do
     user_ids = Subscriptions.get_accepted_subscribe_user_ids(conn)
-    IO.inspect user_ids
     with %Page{entries: post_list, metadata: metadata} <- Posts.get_paginated_posts(params, user_ids) do
       users = FeedHelpers.map_users_from_posts(post_list)
       render(put_view(conn, FeedView), :feed, feed: post_list, metadata: metadata, users: users)

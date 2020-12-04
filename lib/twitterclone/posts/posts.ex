@@ -10,7 +10,7 @@ defmodule Twitterclone.Posts do
   defp base_query() do
     from(p in Post,
       order_by: [desc: p.inserted_at, desc: p.id],
-      preload: [:user, :likes, :tags])
+      preload: [:user, :likes, :tags, :link_preview])
   end
 
   def preload_assocs(post) do
@@ -25,6 +25,12 @@ defmodule Twitterclone.Posts do
     base_query()
     |> limit(^limit)
     |> Repo.all
+  end
+
+  def create_post(conn, %{"message" => message, "link_preview" => link_preview}) do
+    attrs = %{user_id: Guardian.Plug.current_resource(conn), message: message, link_preview: link_preview}
+    Post.changeset(%Post{}, attrs)
+    |> Repo.insert()
   end
 
   def create_post(conn, %{"message" => message}) do
