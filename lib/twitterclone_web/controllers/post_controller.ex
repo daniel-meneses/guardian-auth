@@ -4,15 +4,6 @@ defmodule TwittercloneWeb.PostController do
   alias Paginator.Page
   alias Twitterclone.FeedHelpers
   alias TwittercloneWeb.FeedView
-  alias Twitterclone.Subscriptions
-
-  def index(conn, %{"subscriptions" => subscriptions} = params) do
-    user_ids = Subscriptions.get_accepted_subscribe_user_ids(conn)
-    with %Page{entries: post_list, metadata: metadata} <- Posts.get_paginated_posts(params, user_ids) do
-      users = FeedHelpers.map_users_from_posts(post_list)
-      render(put_view(conn, FeedView), :feed, feed: post_list, metadata: metadata, users: users)
-    end
-  end
 
   def index(conn, params) do
     with %Page{entries: post_list, metadata: metadata} <- Posts.get_paginated_posts(params) do
@@ -27,7 +18,7 @@ defmodule TwittercloneWeb.PostController do
         |> Posts.preload_assocs
         |> Posts.assoc_tags_with_post(get_tags_from_post(post))
         |> Posts.with_user
-      render(conn, :post, post: post)
+      render(conn, :post_no_user, post: post)
     end
   end
 

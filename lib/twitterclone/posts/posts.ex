@@ -14,7 +14,7 @@ defmodule Twitterclone.Posts do
   end
 
   def preload_assocs(post) do
-    Repo.preload(post, [:user, :likes, :tags])
+    Repo.preload(post, [:user, :likes, :tags, :link_preview])
   end
 
   def preload_likes(post) do
@@ -75,7 +75,7 @@ defmodule Twitterclone.Posts do
     |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_paginated_posts(%{"limit" => limit, "cursor" => cursor}, user_ids) do
+  def get_paginated_posts(conn, %{"limit" => limit, "cursor" => cursor}, user_ids) do
     base_query()
     |> where([p], p.user_id in ^user_ids)
     |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))

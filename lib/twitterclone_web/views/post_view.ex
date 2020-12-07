@@ -15,7 +15,6 @@ defmodule TwittercloneWeb.PostView do
   end
 
   def render("post_no_user.json", %{post: post}) do
-    IO.inspect post.link_preview
     %{
       id: post.id,
       post: post.message,
