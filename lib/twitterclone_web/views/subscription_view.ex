@@ -1,59 +1,30 @@
 defmodule TwittercloneWeb.SubscriptionView do
   use TwittercloneWeb, :view
 
-  def render("subscription_with_user.json", %{sub: sub}) do
-    %{ Integer.to_string(sub.id) => %{
-         id: sub.id,
-         subject: render_one(sub.subject, UserView, "public_user.json", as: :user),
-         inserted_at: sub.inserted_at,
-         updated_at: sub.updated_at
-       }
-     }
-  end
+  alias TwittercloneWeb.SubscriptionView
+  alias TwittercloneWeb.UserView
 
-  def render("subscription_single.json", %{sub: sub}) do
+  def render("subscription.json", %{subscription: subscription}) do
     %{
-      subscriptions:
-      %{ Integer.to_string(sub.id) => %{
-        id: sub.id,
-        subject_id: sub.subject.id,
-        }
-      }
+      id: subscription.id,
+      accepted: subscription.accepted,
+      user: render_one(subscription.user, UserView, "public_user.json", as: :user),
+      subject: render_one(subscription.subject, UserView, "public_user.json", as: :user),
+      created_at: subscription.inserted_at
     }
   end
 
-  def render("subscription.json", %{sub: sub}) do
-    %{ Integer.to_string(sub.id) => %{
-         id: sub.id,
-         subject_id: sub.subject.id,
-         inserted_at: sub.inserted_at,
-         updated_at: sub.updated_at
-       }
-     }
+  def render("deleted.json", %{subscription: subscription}) do
+    %{
+      id: subscription.id,
+      subject_id: subscription.subject_id
+    }
   end
 
-  def render("subscription2.json", %{sub: sub, user: user}) do
-    %{ subscriptions:
-      %{Integer.to_string(sub.id) => %{
-         id: sub.id,
-         subject_id: sub.subject.id,
-         inserted_at: sub.inserted_at,
-         updated_at: sub.updated_at
-       }},
-       users: render_one(user, UserView, "data_map_user.json", as: :user)
-     }
+  def render("subscriptions.json", %{subscriptions: subscriptions}) do
+    %{
+      subscriptions:
+        render_many(subscriptions, SubscriptionView, "subscription.json", as: :subscription)
+    }
   end
-
-  def render("subscriptions_map.json", %{subs: subs, users: users}) do
-    subs = render_many(subs, SubscriptionView, "subscription.json", as: :sub)
-    users = render_many(users, UserView, "data_map_user.json", as: :user)
-    %{ subscriptions: Convert.maplist_to_map(subs),
-       users: Convert.maplist_to_map(users)
-     }
-  end
-
-  def render("deleted.json", %{}) do
-    %{deleted: "true"}
-  end
-
 end

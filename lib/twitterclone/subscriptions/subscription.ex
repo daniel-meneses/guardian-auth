@@ -3,7 +3,7 @@ defmodule Twitterclone.Subscriptions.Subscription do
   import Ecto.Changeset
 
   alias Twitterclone.Subscriptions.Subscription
-  alias Twitterclone.Accounts.Users.User
+  alias Twitterclone.Users.User
 
   schema "subscriptions" do
     field :accepted, :boolean, default: false
@@ -16,9 +16,10 @@ defmodule Twitterclone.Subscriptions.Subscription do
   @doc false
   def changeset(%Subscription{} = subscription, attrs) do
     subscription
-    |> cast(attrs, [:user_id, :subject_id])
+    |> cast(attrs, [:user_id, :subject_id, :accepted])
     |> validate_required([:user_id, :subject_id])
     |> foreign_key_constraint(:subject_id)
     |> unique_constraint(:unique_subscription, name: :unique_subscription_index)
   end
+
 end

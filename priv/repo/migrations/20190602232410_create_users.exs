@@ -9,6 +9,7 @@ defmodule Twitterclone.Repo.Migrations.CreateUsers do
       add :alias, :string
       add :device_id, :string
       add :avatar, :string
+      add :private, :boolean, default: false
       timestamps()
     end
     create unique_index(:users, [:alias])

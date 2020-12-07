@@ -3,54 +3,93 @@ defmodule Twitterclone.Posts do
   alias Twitterclone.Repo
   import Ecto.Query, warn: true
 
-  alias Twitterclone.Posts.Post
-  alias Twitterclone.Guardian.Plug
-  alias Twitterclone.Tags.Tag
   alias Twitterclone.Tags
+  alias Twitterclone.Posts.Post
+  alias Twitterclone.Guardian
 
-  defp get_user_id(conn) do
-    Plug.current_resource(conn)
+  defp base_query() do
+    from(p in Post,
+      order_by: [desc: p.inserted_at, desc: p.id],
+      preload: [:user, :likes, :tags, :link_preview])
   end
 
-  defp post_base_query() do
-    from(p in Post, order_by: [desc: p.inserted_at, desc: p.id])
+  def preload_assocs(post) do
+    Repo.preload(post, [:user, :likes, :tags, :link_preview])
   end
-# tags: [%{title: "testtag"}]
-  def create_post(conn, %{"message" => message}) do
-    attrs = %{user_id: get_user_id(conn), message: message }
+
+  def preload_likes(post) do
+    Repo.preload(post, [:likes])
+  end
+
+  def get_recent_posts(limit) do
+    base_query()
+    |> limit(^limit)
+    |> Repo.all
+  end
+
+  def create_post(conn, %{"message" => message, "link_preview" => link_preview}) do
+    attrs = %{user_id: Guardian.Plug.current_resource(conn), message: message, link_preview: link_preview}
     Post.changeset(%Post{}, attrs)
     |> Repo.insert()
   end
 
-  def get_all_post() do
-    Post
-    |> preload_users_likes
+  def create_post(conn, %{"message" => message}) do
+    attrs = %{user_id: Guardian.Plug.current_resource(conn), message: message}
+    Post.changeset(%Post{}, attrs)
+    |> Repo.insert()
   end
 
-  def get_all_post_by_user_id(id) do
-    query = post_base_query()
+  def get_paginated_posts(%{"limit" => limit, "cursor" => cursor, "user_id" => id}) do
+    base_query()
     |> where([p], p.user_id==^id)
-    |> preload_users_likes
-    Repo.paginate(query, cursor_fields: [:inserted_at, :id])
+    |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  defp preload_users_likes(obj) do
-    obj
-    |> preload(:user)
-    |> preload(:likes)
-    |> preload(:tags)
+  def get_paginated_posts(%{"limit" => limit, "user_id" => id}) do
+    base_query()
+    |> where([p], p.user_id==^id)
+    |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_tags_from_post(post) do
-    str = String.split(post.message)
-    Enum.filter(str, fn x -> String.starts_with?(x, ["#"]) end)
-    |> Enum.uniq()
-    |> Enum.map( fn x -> String.slice(x, 1..-1) end)
+  def get_paginated_posts(%{"limit" => limit, "cursor" => cursor, "tag" => tag}) do
+    base_query()
+    |> join(:left, [p], t in assoc(p, :tags), on: t.title == ^tag)
+    |> where([p,t], t.title == ^tag)
+    |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def assoc_tag(post, tags) do
+  def get_paginated_posts(%{"limit" => limit, "tag" => tag}) do
+    base_query()
+    |> join(:left, [p], t in assoc(p, :tags), on: t.title == ^tag)
+    |> where([p,t], t.title == ^tag)
+    |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
+  end
+
+  def get_paginated_posts(%{"limit" => limit, "cursor" => cursor}) do
+    base_query()
+    |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
+  end
+
+  def get_paginated_posts(%{"limit" => limit}) do
+    base_query()
+    |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
+  end
+
+  def get_paginated_posts(conn, %{"limit" => limit, "cursor" => cursor}, user_ids) do
+    base_query()
+    |> where([p], p.user_id in ^user_ids)
+    |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
+  end
+
+  def get_paginated_posts(%{"limit" => limit}, user_ids) do
+    base_query()
+    |> where([p], p.user_id in ^user_ids)
+    |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
+  end
+
+  def assoc_tags_with_post(post, tags) do
     tags = Enum.map(tags, fn tag ->
-      {:ok, tag} = Tags.use_existing_or_create_tag(tag)
+      {:ok, tag} = Tags.create_tag(tag)
       tag
     end)
     post
@@ -59,23 +98,9 @@ defmodule Twitterclone.Posts do
     |> Repo.update!()
   end
 
-  def paginate_with_after(afterCursor) do
-    query = post_base_query() |> preload_users_likes
-    Repo.paginate(query, after: afterCursor, cursor_fields: [:inserted_at, :id])
-  end
-
-  def paginate() do
-    query = post_base_query() |> preload_users_likes
-    Repo.paginate(query, cursor_fields: [:inserted_at, :id])
-  end
-
-  def get_trending_from_recent() do
-    posts = Repo.all from p in Post,
-      order_by: [desc: :inserted_at],
-      limit: 200,
-      preload: [:tags]
-    test1 = Enum.flat_map(posts, fn p -> p.tags end)
-    Enum.frequencies(test1) |> Enum.sort_by( &(elem(&1, 1)), :desc )
+  def with_user(post) do
+    post
+    |> Repo.preload([:user])
   end
 
 end

@@ -21,33 +21,28 @@ defmodule TwittercloneWeb.Router do
     pipe_through :api
     post "/user", UserController, :create
     post "/session", SessionController, :create
-    pipe_through :authenticated
+  end
+
+  scope "/api/v1/accounts", TwittercloneWeb.Accounts do
+    pipe_through [:api, :authenticated]
+    get "/presigned", UserController, :show
     get "/session", SessionController, :show
-    delete "/session/delete", SessionController, :delete
-    resources "/refresh", RefreshController, only: [:create]
-  end
-
-  scope "/api/v1/accounts/user", TwittercloneWeb.Accounts do
-    pipe_through [:api, :csrf, :authenticated]
-    post "/update", UserController, :update
-    get "/avatar/presigned", AvatarController, :show
-    post "/avatar", AvatarController, :update
-  end
-
-  scope "/api/v1", TwittercloneWeb do
-    pipe_through [:api, :csrf, :authenticated]
-    resources "/post", PostController, only: [:create]
-    resources "/like", LikeController, only: [:index, :create, :delete]
-    resources "/subscription", SubscriptionController, only: [:index, :create, :delete]
-    resources "/follower", FollowerController, only: [:index, :create]
+    delete "/session", SessionController, :delete
+    patch "/user", UserController, :update
   end
 
   scope "/api/v1", TwittercloneWeb do
     pipe_through [:api, :csrf]
-    get "/feed/global", FeedController, :index
-    get "/feed/user/:id", FeedController, :index
-    get "/explore/tag/:id", ExploreController, :index
-    get "/trending/tags", TrendingController, :index
+    get "/posts", PostController, :index
+    get "/tags", TagsController, :index
+  end
+
+  scope "/api/v1", TwittercloneWeb do
+    pipe_through [:api, :csrf, :authenticated]
+    post "/posts", PostController, :create
+    get "/subscriptions/posts", SubscriptionPostController, :index
+    resources "/subscriptions", SubscriptionController, only: [:index, :create, :delete]
+    resources "/like", LikeController, only: [:index, :create, :delete]
   end
 
 end

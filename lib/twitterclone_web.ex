@@ -27,8 +27,8 @@ defmodule TwittercloneWeb do
       alias Twitterclone.Repo
       alias Twitterclone.{Accounts, Subscriptions, Likes, Posts, RequireParams}
       alias Twitterclone.Accounts
-      alias Twitterclone.Accounts.Users
-      alias Twitterclone.Accounts.Users.User
+      alias Twitterclone.Users
+      alias Twitterclone.Users.User
       action_fallback TwittercloneWeb.FallbackController
     end
   end
