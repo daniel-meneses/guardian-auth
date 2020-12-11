@@ -27,6 +27,13 @@ defmodule Twitterclone.Posts do
     |> Repo.all
   end
 
+  defp filter_not_user_id(conn) do
+    case Guardian.Plug.current_resource(conn) do
+      nil -> true
+      _ -> dynamic([p], not(p.user_id == ^Guardian.Plug.current_resource(conn)))
+    end
+  end
+
   def create_post(conn, %{"message" => message, "link_preview" => link_preview}) do
     attrs = %{user_id: Guardian.Plug.current_resource(conn), message: message, link_preview: link_preview}
     Post.changeset(%Post{}, attrs)
@@ -67,13 +74,13 @@ defmodule Twitterclone.Posts do
 
   def get_paginated_posts(conn, %{"limit" => limit, "cursor" => cursor}) do
     base_query()
-    |> where([p], not(p.user_id == ^Guardian.Plug.current_resource(conn)))
+    |> where(^filter_not_user_id(conn))
     |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
   def get_paginated_posts(conn, %{"limit" => limit}) do
     base_query()
-    |> where([p], not(p.user_id == ^Guardian.Plug.current_resource(conn)))
+    |> where(^filter_not_user_id(conn))
     |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 

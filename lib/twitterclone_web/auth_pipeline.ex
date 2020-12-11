@@ -5,5 +5,5 @@ defmodule Twitterclone.Guardian.AuthPipeline do
  # @claims %{"iss" => "twitterclone"}
  # plug Guardian.Plug.VerifyHeader, claims: @claims, realm: "Bearer"
   plug Guardian.Plug.VerifySession, claims: %{"typ" => "access"}
-  plug Guardian.Plug.LoadResource, allow_blank: false
+  plug Guardian.Plug.LoadResource, allow_blank: true
 end
