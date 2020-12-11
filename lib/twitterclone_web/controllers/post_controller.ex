@@ -6,7 +6,7 @@ defmodule TwittercloneWeb.PostController do
   alias TwittercloneWeb.FeedView
 
   def index(conn, params) do
-    with %Page{entries: post_list, metadata: metadata} <- Posts.get_paginated_posts(params) do
+    with %Page{entries: post_list, metadata: metadata} <- Posts.get_paginated_posts(conn, params) do
       users = FeedHelpers.map_users_from_posts(post_list)
       render(put_view(conn, FeedView), :feed, feed: post_list, metadata: metadata, users: users)
     end

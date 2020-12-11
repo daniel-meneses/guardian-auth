@@ -13,8 +13,13 @@ defmodule TwittercloneWeb.Router do
     # plug Plug.CSRFProtection
   end
 
+  pipeline :load_resource do
+    plug Twitterclone.Guardian.AuthPipeline
+  end
+
   pipeline :authenticated do
     plug Twitterclone.Guardian.AuthPipeline
+    plug Guardian.Plug.EnsureAuthenticated
   end
 
   scope "/api/v1/accounts", TwittercloneWeb.Accounts do
@@ -32,7 +37,7 @@ defmodule TwittercloneWeb.Router do
   end
 
   scope "/api/v1", TwittercloneWeb do
-    pipe_through [:api, :csrf]
+    pipe_through [:api, :csrf, :load_resource]
     get "/posts", PostController, :index
     get "/tags", TagsController, :index
   end

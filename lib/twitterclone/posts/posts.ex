@@ -39,49 +39,51 @@ defmodule Twitterclone.Posts do
     |> Repo.insert()
   end
 
-  def get_paginated_posts(%{"limit" => limit, "cursor" => cursor, "user_id" => id}) do
+  def get_paginated_posts(_conn, %{"limit" => limit, "cursor" => cursor, "user_id" => id}) do
     base_query()
     |> where([p], p.user_id==^id)
     |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_paginated_posts(%{"limit" => limit, "user_id" => id}) do
+  def get_paginated_posts(_conn, %{"limit" => limit, "user_id" => id}) do
     base_query()
     |> where([p], p.user_id==^id)
     |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_paginated_posts(%{"limit" => limit, "cursor" => cursor, "tag" => tag}) do
+  def get_paginated_posts(_conn, %{"limit" => limit, "cursor" => cursor, "tag" => tag}) do
     base_query()
     |> join(:left, [p], t in assoc(p, :tags), on: t.title == ^tag)
     |> where([p,t], t.title == ^tag)
     |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_paginated_posts(%{"limit" => limit, "tag" => tag}) do
+  def get_paginated_posts(_conn, %{"limit" => limit, "tag" => tag}) do
     base_query()
     |> join(:left, [p], t in assoc(p, :tags), on: t.title == ^tag)
     |> where([p,t], t.title == ^tag)
     |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_paginated_posts(%{"limit" => limit, "cursor" => cursor}) do
+  def get_paginated_posts(conn, %{"limit" => limit, "cursor" => cursor}) do
     base_query()
+    |> where([p], not(p.user_id == ^Guardian.Plug.current_resource(conn)))
     |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_paginated_posts(%{"limit" => limit}) do
+  def get_paginated_posts(conn, %{"limit" => limit}) do
     base_query()
+    |> where([p], not(p.user_id == ^Guardian.Plug.current_resource(conn)))
     |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_paginated_posts(conn, %{"limit" => limit, "cursor" => cursor}, user_ids) do
+  def get_paginated_posts(_conn, %{"limit" => limit, "cursor" => cursor}, user_ids) do
     base_query()
     |> where([p], p.user_id in ^user_ids)
     |> Repo.paginate(after: cursor, cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
   end
 
-  def get_paginated_posts(%{"limit" => limit}, user_ids) do
+  def get_paginated_posts(_conn, %{"limit" => limit}, user_ids) do
     base_query()
     |> where([p], p.user_id in ^user_ids)
     |> Repo.paginate(cursor_fields: [:inserted_at, :id], limit: String.to_integer(limit))
