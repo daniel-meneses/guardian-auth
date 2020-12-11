@@ -13,6 +13,7 @@ defmodule Twitterclone.Tags do
     Repo.all(from(t in Tag,
     limit: ^limit,
     group_by: [^String.to_atom(group_by)],
+    order_by: count(t.id),
     select: %{tag: t.title, count: count(t.id)}))
   end
 

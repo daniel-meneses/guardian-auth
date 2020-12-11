@@ -27,7 +27,7 @@ defmodule TwittercloneWeb.PostController do
     |> String.split
     |> Enum.filter(fn x -> String.starts_with?(x, ["#"]) end)
     |> Enum.uniq
-    |> Enum.map(fn x -> String.slice(x, 1..-1) end)
+    |> Enum.map(fn x -> String.slice(x, 1..-1) |> String.trim() end)
   end
 
 end
