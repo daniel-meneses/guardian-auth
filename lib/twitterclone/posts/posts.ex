@@ -36,6 +36,7 @@ defmodule Twitterclone.Posts do
 
   defp paginated_posts(query, %{"limit" => limit, "cursor" => cursor}) do
   after_cursor = if cursor == "", do: nil, else: cursor
+  after_cursor = if cursor == "null", do: nil, else: after_cursor
   query |> Repo.paginate(
     after: after_cursor,
     cursor_fields: [:inserted_at, :id],
