@@ -34,12 +34,14 @@ defmodule Twitterclone.Posts do
     end
   end
 
-  defp paginated_posts(query, %{"limit" => limit, "cursor" => cursor}),
-  do: query |> Repo.paginate(
-    after: cursor,
+  defp paginated_posts(query, %{"limit" => limit, "cursor" => cursor}) do
+  after_cursor = if cursor == "", do: nil, else: cursor
+  query |> Repo.paginate(
+    after: after_cursor,
     cursor_fields: [:inserted_at, :id],
     limit: String.to_integer(limit)
   )
+  end
 
   defp paginated_posts(query, %{"limit" => limit}),
   do: query |> Repo.paginate(
