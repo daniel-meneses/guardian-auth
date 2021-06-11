@@ -27,13 +27,6 @@ defmodule Twitterclone.Posts do
     |> Repo.all()
   end
 
-  defp filter_not_user_id(conn) do
-    case Guardian.Plug.current_resource(conn) do
-      nil -> true
-      _ -> dynamic([p], not (p.user_id == ^Guardian.Plug.current_resource(conn)))
-    end
-  end
-
   defp paginated_posts(query, %{"limit" => limit, "cursor" => cursor}) do
   after_cursor = if cursor == "", do: nil, else: cursor
   after_cursor = if cursor == "null", do: nil, else: after_cursor

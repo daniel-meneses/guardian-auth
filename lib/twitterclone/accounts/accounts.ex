@@ -70,30 +70,4 @@ defmodule Twitterclone.Accounts do
     |> Users.update_user_info(user_info)
   end
 
-  @doc """
-  Accepts refresh token and returns access token on success.
-  Returns __ on fail.
-  """
-  def refresh_token(access, refresh) do
-    case refresh_token_is_valid(refresh) do
-      true -> Twitterclone.Guardian.refresh(access, ttl: {2, :weeks})
-        false -> false
-    end
-  end
-
-  def refresh_token_is_valid(token) do
-    claims =  %{typ: "refresh", iss: "twitterclone"}
-    case Twitterclone.Guardian.decode_and_verify(token, claims) do
-      {:ok, claims} -> claims["exp"] > Guardian.timestamp()
-      _ -> false
-    end
-  end
-
-  @doc false
-  defp encode_tokens(user) do
-    {:ok, token_refresh, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "refresh")
-    {:ok, token_access, _claims} = Guardian.encode_and_sign(user, %{}, token_type: "access")
-    {:ok, user, token_refresh, token_access}
-  end
-
 end

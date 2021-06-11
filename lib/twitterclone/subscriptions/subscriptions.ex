@@ -2,7 +2,6 @@ defmodule Twitterclone.Subscriptions do
 
   import Ecto.Query, warn: false
   import Ecto.Type
-  alias Twitterclone.Users.User
   alias Twitterclone.{Repo, Guardian.Plug}
   alias Twitterclone.Subscriptions.Subscription
 
